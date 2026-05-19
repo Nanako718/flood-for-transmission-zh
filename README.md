@@ -30,7 +30,7 @@
 
 ### 从 Release 安装（推荐）
 
-1. 在本仓库 [Releases](https://github.com/Nanako718/flood-for-transmission/releases) 下载 `flood-for-transmission.zip` 或 `.tar.gz`。
+1. 在本仓库 [Releases](https://github.com/Nanako718/flood-for-transmission-zh/releases) 下载 `flood-for-transmission.zip` 或 `.tar.gz`。
 2. 解压到目标目录，例如 `/opt/flood-for-transmission`。
 3. 配置 Transmission 使用该目录为 Web 根目录：
 
@@ -56,7 +56,7 @@ Environment=TRANSMISSION_WEB_HOME=/path/to/flood-for-transmission
 ### 从源码构建
 
 ```bash
-git clone https://github.com/Nanako718/flood-for-transmission.git
+git clone https://github.com/Nanako718/flood-for-transmission-zh.git
 cd flood-for-transmission
 npm install
 npm run build
@@ -102,7 +102,7 @@ git remote remove upstream
 
 ```bash
 git remote -v
-# origin  https://github.com/<你的用户名>/flood-for-transmission.git
+# origin  https://github.com/Nanako718/flood-for-transmission-zh.git
 ```
 
 之后在 `origin` 上正常 push 即可，不会自动同步到 johman10 的仓库。

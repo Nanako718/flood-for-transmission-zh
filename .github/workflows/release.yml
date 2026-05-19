@@ -75,11 +75,11 @@ jobs:
             3. 重启 Transmission，浏览器访问 Daemon 地址（默认 `http://localhost:9091`）。
             4. 若有自定义配置，请备份并恢复 `public/config.json`。
 
-            详细步骤见 [README](https://github.com/Nanako718/flood-for-transmission/blob/main/README.md)。
+            详细步骤见 [README](https://github.com/Nanako718/flood-for-transmission-zh/blob/main/README.md)。
 
             ### 说明
 
-            - 本 Release **不**同步自上游 johman10 仓库；问题反馈请在本仓库 [Issues](https://github.com/Nanako718/flood-for-transmission/issues) 提交。
+            - 本 Release **不**同步自上游 johman10 仓库；问题反馈请在本仓库 [Issues](https://github.com/Nanako718/flood-for-transmission-zh/issues) 提交。
             - 界面设计溯源自 [Flood](https://github.com/Flood-UI/flood)；Transmission 适配代码来自上游项目。
 
             ### 致谢

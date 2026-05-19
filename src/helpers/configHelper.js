@@ -51,7 +51,7 @@ async function fetchConfigJson() {
   }
 
   console.info(
-    '未找到 config.json，已使用内置默认配置。\n详见 https://github.com/Nanako718/flood-for-transmission#配置'
+    '未找到 config.json，已使用内置默认配置。\n详见 https://github.com/Nanako718/flood-for-transmission-zh#配置'
   );
   return {};
 }

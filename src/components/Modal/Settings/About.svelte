@@ -1,7 +1,7 @@
 <script>
   import Header from './Header.svelte';
 
-  const REPO_URL = 'https://github.com/Nanako718/flood-for-transmission';
+  const REPO_URL = 'https://github.com/Nanako718/flood-for-transmission-zh';
   const UPSTREAM_URL = 'https://github.com/johman10/flood-for-transmission';
   const FLOOD_UI_URL = 'https://github.com/Flood-UI/flood';
 </script>
