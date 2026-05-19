@@ -41,10 +41,10 @@
       loadingInitial = false;
     })
     .catch(() => {
-      alerts.add(
-        'Unable to fetch the data for that action right now. Try again later.',
-        'negative'
-      );
+      alerts.add('暂时无法获取数据，请稍后再试。', 'negative');
+    })
+    .finally(() => {
+      loadingInitial = false;
     });
 
   const handleSubmit = () => {
@@ -58,11 +58,12 @@
         'utp-enabled': utpEnabled,
       })
       .then(() => {
-        alerts.add('Succesfully saved network settings');
+        alerts.add('网络设置已保存');
+        modals.close();
       })
       .catch(() => {
         alerts.add(
-          'Failed saving network settings, please try again',
+          '网络设置保存失败，请重试',
           'negative'
         );
       })
@@ -74,35 +75,41 @@
 
 <div class="wrapper" class:loading-initial={loadingInitial}>
   <Icon name="SpinnerIcon" />
-  <form on:submit|preventDefault={handleSubmit}>
-    <Header text="Listening port" />
+  <form
+    novalidate
+    onsubmit={(event) => {
+      event.preventDefault();
+      handleSubmit();
+    }}
+  >
+    <Header text="监听端口" />
     <Input
-      label="Peer listening port"
+      label="监听端口"
       bind:value={peerPort}
       type="number"
-      hint="Port is {portOpen ? 'open' : 'closed'}"
+      hint="端口{portOpen ? '已开放' : '已关闭'}"
     />
     <Checkbox
-      label="Randomize port on launch"
+      label="启动时随机端口"
       bind:checked={randomizePeerPort}
     />
     <Checkbox
-      label="Use port forwarding from my router"
+      label="使用路由器端口转发"
       bind:checked={portForwardingEnabled}
     />
 
-    <Header text="Options" />
+    <Header text="选项" />
     <Checkbox
-      label="Enable uTP for peer communication"
+      label="启用 uTP"
       bind:checked={utpEnabled}
     />
 
     <div class="buttons">
-      <Button type="button" priority="tertiary" on:click={modals.close}>
-        Cancel
+      <Button type="button" priority="tertiary" onclick={() => modals.close()}>
+        取消
       </Button>
       <Button type="submit" priority="primary" loading={submitLoading}>
-        Save settings
+        保存设置
       </Button>
     </div>
   </form>
@@ -136,6 +143,7 @@
 
   .wrapper.loading-initial form {
     visibility: hidden;
+    pointer-events: none;
   }
 
   form {

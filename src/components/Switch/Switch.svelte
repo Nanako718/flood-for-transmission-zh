@@ -4,6 +4,7 @@
   const dispatch = createEventDispatcher();
 
   export let checked;
+  export let ariaLabel = '开关';
 
   const handleClick = () => {
     checked = !checked;
@@ -11,11 +12,21 @@
   };
 </script>
 
-<div class:checked={checked} on:click={handleClick}></div>
+<button
+  type="button"
+  role="switch"
+  class="switch"
+  class:checked={checked}
+  aria-checked={checked}
+  aria-label={ariaLabel || undefined}
+  on:click={handleClick}
+></button>
 
 <style>
-  div {
+  .switch {
     background-color: var(--color-switch-inactive);
+    border: none;
+    padding: 0;
     width: 32px;
     height: 20px;
     border-radius: 10px;
@@ -29,7 +40,7 @@
     flex-shrink: 0;
   }
 
-  div::after {
+  .switch::after {
     content: '';
     height: 14px;
     width: 14px;

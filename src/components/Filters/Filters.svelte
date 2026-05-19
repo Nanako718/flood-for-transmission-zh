@@ -22,49 +22,49 @@
 
   $: statusFilters = [
     {
-      label: 'All',
+      label: '全部',
       value: null,
       iconName: 'All',
       count: $torrents.length,
     },
     {
-      label: 'Active',
+      label: '活动',
       value: 'active',
       iconName: 'Active',
       count: $torrents.filter(statusFilter.bind(null, 'active')).length,
     },
     {
-      label: 'Downloading',
+      label: '下载中',
       value: 'downloading',
       iconName: 'DownloadSmall',
       count: $torrents.filter(statusFilter.bind(null, 'downloading')).length,
     },
     {
-      label: 'Complete',
+      label: '已完成',
       value: 'complete',
       iconName: 'Completed',
       count: $torrents.filter(statusFilter.bind(null, 'complete')).length,
     },
     {
-      label: 'Stopped',
+      label: '已停止',
       value: 'stopped',
       iconName: 'StopIcon',
       count: $torrents.filter(statusFilter.bind(null, 'stopped')).length,
     },
     {
-      label: 'Checking',
+      label: '校验中',
       value: 'checking',
       iconName: 'InformationIcon',
       count: $torrents.filter(statusFilter.bind(null, 'checking')).length,
     },
     {
-      label: 'Seeding',
+      label: '做种中',
       value: 'seeding',
       iconName: 'SeedsIcon',
       count: $torrents.filter(statusFilter.bind(null, 'seeding')).length,
     },
     {
-      label: 'Error',
+      label: '错误',
       value: 'error',
       iconName: 'ErrorIcon',
       count: $torrents.filter(statusFilter.bind(null, 'error')).length,
@@ -73,22 +73,22 @@
 
   $: priorityFilters = [
     {
-      label: 'All',
+      label: '全部',
       value: null,
       count: $torrents.length,
     },
     {
-      label: 'High',
+      label: '高',
       value: 1,
       count: $torrents.filter(priorityFilter.bind(null, 1)).length,
     },
     {
-      label: 'Normal',
+      label: '普通',
       value: 0,
       count: $torrents.filter(priorityFilter.bind(null, 0)).length,
     },
     {
-      label: 'Low',
+      label: '低',
       value: -1,
       count: $torrents.filter(priorityFilter.bind(null, -1)).length,
     },
@@ -96,12 +96,12 @@
 
   $: labelFilters = [
     {
-      label: 'All',
+      label: '全部',
       value: null,
       count: $torrents.length,
     },
     {
-      label: 'Unlabeled',
+      label: '无标签',
       value: 'unlabeled',
       count: $torrents.filter(labelFilter.bind(null, 'unlabeled')).length,
     },
@@ -126,7 +126,7 @@
 
   $: trackerFilters = [
     {
-      label: 'All',
+      label: '全部',
       value: null,
       count: $torrents.length,
     },
@@ -201,97 +201,123 @@
 </script>
 
 <div class="wrapper">
-  <h2>Filter by status</h2>
+  <h2>按状态筛选</h2>
   <ul>
     {#each statusFilters as filter (filter.label)}
-      <li
-        class:active="{$filters.status === filter.value}"
-        on:click="{setStatusFilter.bind(null, filter.value)}"
-      >
-        <Icon name="{filter.iconName}" />
-        {filter.label}
-        <Badge>{filter.count || 0}</Badge>
+      <li>
+        <button
+          type="button"
+          class="filter-item"
+          class:active={$filters.status === filter.value}
+          on:click={setStatusFilter.bind(null, filter.value)}
+        >
+          <Icon name={filter.iconName} />
+          {filter.label}
+          <Badge>{filter.count || 0}</Badge>
+        </button>
       </li>
     {/each}
   </ul>
 
-  <h2>Filter by priority</h2>
+  <h2>按优先级筛选</h2>
   <ul>
     {#each priorityFilters as filter (filter.label)}
-      <li
-        class:active="{$filters.priority === filter.value}"
-        on:click="{setPriorityFilter.bind(null, filter.value)}"
-      >
-        {filter.label}
-        <Badge>{filter.count || 0}</Badge>
+      <li>
+        <button
+          type="button"
+          class="filter-item"
+          class:active={$filters.priority === filter.value}
+          on:click={setPriorityFilter.bind(null, filter.value)}
+        >
+          {filter.label}
+          <Badge>{filter.count || 0}</Badge>
+        </button>
       </li>
     {/each}
   </ul>
 
-  <h2>Filter by label</h2>
+  <h2>按标签筛选</h2>
   <ul>
     {#each labelFilters as filter, index (filter.label)}
       <li
-        class:active="{$filters.label === filter.value}"
-        on:click="{setLabelFilter.bind(null, filter.value)}"
-        in:slide="{getTransitionConfig(
+        in:slide={getTransitionConfig(
           'in',
           previousLabelFiltersLength,
           labelFilters.length,
           index
-        )}"
-        out:slide="{getTransitionConfig(
+        )}
+        out:slide={getTransitionConfig(
           'out',
           previousLabelFiltersLength,
           labelFilters.length,
           index
-        )}"
+        )}
       >
-        {filter.label}
-        <Badge>{filter.count || 0}</Badge>
+        <button
+          type="button"
+          class="filter-item"
+          class:active={$filters.label === filter.value}
+          on:click={setLabelFilter.bind(null, filter.value)}
+        >
+          {filter.label}
+          <Badge>{filter.count || 0}</Badge>
+        </button>
       </li>
     {/each}
     {#if labelFilters.length > limitedLabelsCount}
-      <li
-        on:click="{() => {
-          limitLabels = !limitLabels;
-        }}"
-      >
-        {#if limitLabels}Show all...{:else}Hide some...{/if}
+      <li>
+        <button
+          type="button"
+          class="filter-item filter-item--toggle"
+          on:click={() => {
+            limitLabels = !limitLabels;
+          }}
+        >
+          {#if limitLabels}显示全部…{:else}收起部分…{/if}
+        </button>
       </li>
     {/if}
   </ul>
 
-  <h2>Filter by tracker</h2>
+  <h2>按 Tracker 筛选</h2>
   <ul>
     {#each trackerFilters as filter, index (filter.label)}
       <li
-        class:active="{$filters.tracker === filter.value}"
-        on:click="{setTrackerFilter.bind(null, filter.value)}"
-        in:slide="{getTransitionConfig(
+        in:slide={getTransitionConfig(
           'in',
           previousTrackerFiltersLength,
           trackerFilters.length,
           index
-        )}"
-        out:slide="{getTransitionConfig(
+        )}
+        out:slide={getTransitionConfig(
           'out',
           previousTrackerFiltersLength,
           trackerFilters.length,
           index
-        )}"
+        )}
       >
-        {filter.label}
-        <Badge>{filter.count || 0}</Badge>
+        <button
+          type="button"
+          class="filter-item"
+          class:active={$filters.tracker === filter.value}
+          on:click={setTrackerFilter.bind(null, filter.value)}
+        >
+          {filter.label}
+          <Badge>{filter.count || 0}</Badge>
+        </button>
       </li>
     {/each}
     {#if trackerFilters.length > limitedTrackersCount}
-      <li
-        on:click="{() => {
-          limitTrackers = !limitTrackers;
-        }}"
-      >
-        {#if limitTrackers}Show all...{:else}Hide some...{/if}
+      <li>
+        <button
+          type="button"
+          class="filter-item filter-item--toggle"
+          on:click={() => {
+            limitTrackers = !limitTrackers;
+          }}
+        >
+          {#if limitTrackers}显示全部…{:else}收起部分…{/if}
+        </button>
       </li>
     {/if}
   </ul>
@@ -317,36 +343,54 @@
   }
 
   li {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .filter-item {
+    align-items: center;
+    background: none;
+    border: none;
+    color: inherit;
     cursor: pointer;
+    display: flex;
+    font: inherit;
+    font-size: 13px;
     font-weight: 400;
     padding: 3px 0;
-    display: flex;
-    align-items: center;
+    text-align: left;
     transition:
       fill 0.25s,
       color 0.25s;
-    font-size: 13px;
+    width: 100%;
   }
 
-  li:hover {
+  .filter-item:hover {
     color: var(--color-panel-hover);
   }
 
-  li:hover > :global(.badge) {
+  .filter-item:hover > :global(.badge) {
     background-color: var(--color-panel-hover);
   }
 
-  li.active {
+  .filter-item.active {
     color: var(--color-panel-active);
     font-weight: 700;
   }
 
-  li > :global(.icon) {
+  .filter-item > :global(.icon) {
     height: 14px;
     margin-right: 7px;
   }
 
-  li.active > :global(.badge) {
+  .filter-item.active > :global(.badge) {
     background-color: var(--color-panel-active);
+    color: var(--color-panel-badge-text);
+  }
+
+  .filter-item > :global(.badge) {
+    background-color: var(--color-panel-badge-background);
+    color: var(--color-panel-badge-text);
   }
 </style>

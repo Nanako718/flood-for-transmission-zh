@@ -14,36 +14,99 @@
   export let onLocation;
   export let onPrio;
 
-  let priorityIndicator;
-
-  const clickOnPriorityIndicator = () => {
-    priorityIndicator.$capture_state().element.click();
+  const handlePriority = (event) => {
+    onItemClick(onPrio, [event], { shouldClose: false });
+    prio = event.detail;
   };
 </script>
 
-<li on:click={(...args) => onItemClick(onStart, args)}>Start</li>
-<li on:click={(...args) => onItemClick(onStartNow, args)}>Start now</li>
-<li on:click={(...args) => onItemClick(onStop, args)}>Stop</li>
-<li on:click={(...args) => onItemClick(onRemove, args)}>Remove</li>
-<li on:click={(...args) => onItemClick(onVerify, args)}>Verify local data</li>
-<li on:click={(...args) => onItemClick(onCopyMagnetLink, args)}>
-  Copy magnet link
+<li class="context-menu-section" role="presentation">
+  <div class="context-menu-section-inner">
+    <span class="context-menu-section-title">传输</span>
+    <div class="context-menu-items" role="group" aria-label="传输">
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onStart, args)}>开始</button
+      >
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onStartNow, args)}>立即开始</button
+      >
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onStop, args)}>停止</button
+      >
+    </div>
+  </div>
 </li>
-<li on:click={(...args) => onItemClick(onAsk, args)}>
-  Ask tracker for more peers
+
+<li class="context-menu-section" role="presentation">
+  <div class="context-menu-section-inner">
+    <span class="context-menu-section-title">管理</span>
+    <div class="context-menu-items" role="group" aria-label="管理">
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onRemove, args)}>移除</button
+      >
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onVerify, args)}>校验本地数据</button
+      >
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onLabels, args)}>设置标签</button
+      >
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onLocation, args)}>设置位置</button
+      >
+    </div>
+  </div>
 </li>
-<hr />
-<li on:click={(...args) => onItemClick(onLabels, args)}>Set labels</li>
-<li on:click={(...args) => onItemClick(onLocation, args)}>Set location</li>
-<hr />
-<li on:click={clickOnPriorityIndicator}>
-  Priority
-  <PriorityIndicator
-    bind:this={priorityIndicator}
-    value={prio}
-    on:click={(event, ...args) => {
-      onItemClick(onPrio, [event, ...args], { shouldClose: false });
-      prio = event.detail;
-    }}
-  />
+
+<li class="context-menu-section" role="presentation">
+  <div class="context-menu-section-inner">
+    <span class="context-menu-section-title">Tracker</span>
+    <div class="context-menu-items" role="group" aria-label="Tracker">
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onCopyMagnetLink, args)}
+      >
+        复制磁力链接
+      </button>
+      <button
+        type="button"
+        role="menuitem"
+        class="context-menu-item"
+        on:click={(...args) => onItemClick(onAsk, args)}
+      >
+        向 Tracker 重新汇报
+      </button>
+    </div>
+  </div>
+</li>
+
+<li class="context-menu-section context-menu-priority" role="presentation">
+  <div class="context-menu-section-inner">
+    <span class="context-menu-section-title">优先级</span>
+    <div class="context-menu-items">
+      <PriorityIndicator value={prio} on:click={handlePriority} />
+    </div>
+  </div>
 </li>

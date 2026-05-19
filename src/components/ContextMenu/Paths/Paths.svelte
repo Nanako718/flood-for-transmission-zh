@@ -16,11 +16,34 @@
 </script>
 
 {#if $paths.length}
-  {#each $paths as path (path)}
-    <li on:click={onItemClick(onPathSelect, [path])}>{path}</li>
-  {/each}
+  <li class="context-menu-section" role="presentation">
+    <div class="context-menu-section-inner">
+      <span class="context-menu-section-title">常用路径</span>
+      <div class="context-menu-items" role="group" aria-label="常用路径">
+        {#each $paths as path (path)}
+          <button
+            type="button"
+            role="menuitem"
+            class="context-menu-item"
+            on:click={onItemClick(onPathSelect, [path])}>{path}</button
+          >
+        {/each}
+      </div>
+    </div>
+  </li>
 {:else}
-  <li on:click={onFallbackClick}>
-    No common paths configured yet, click here to add some.
+  <li class="context-menu-section" role="presentation">
+    <div class="context-menu-section-inner">
+      <div class="context-menu-items">
+        <button
+          type="button"
+          role="menuitem"
+          class="context-menu-item"
+          on:click={onFallbackClick}
+        >
+          配置常用路径…
+        </button>
+      </div>
+    </div>
   </li>
 {/if}

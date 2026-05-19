@@ -12,19 +12,19 @@
 
   const pages = [
     {
-      name: 'Details',
+      name: '详情',
       component: Details,
     },
     {
-      name: 'Files',
+      name: '文件',
       component: Files,
     },
     {
-      name: 'Peers',
+      name: 'Peer',
       component: Peers,
     },
     {
-      name: 'Trackers',
+      name: 'Tracker',
       component: Trackers,
     },
   ];
@@ -44,16 +44,18 @@
 <div class="container" class:loading-initial={loadingInitial}>
   <Icon name="SpinnerIcon" />
   <Header torrentId={torrentId} />
-  <div class="content">
-    <nav>
+  <div class="body">
+    <nav class="torrent-detail-nav" aria-label="种子详情分类">
       {#each pages as { name, component } (name)}
-        <a
-          href="/{name.toLowerCase()}"
+        <button
+          type="button"
+          class="torrent-detail-nav-item"
           class:active={page.name === name}
-          on:click|preventDefault={() => (page = { name, component })}
+          aria-current={page.name === name ? 'page' : undefined}
+          on:click={() => (page = { name, component })}
         >
           {name}
-        </a>
+        </button>
       {/each}
     </nav>
     <div class="page-content">
@@ -87,69 +89,30 @@
     display: inherit;
   }
 
-  .container.loading-initial > :global(.header) {
+  .container.loading-initial > :global(.torrent-detail-header) {
     display: none;
   }
 
-  .container.loading-initial > .content {
+  .container.loading-initial > .body {
     display: none;
   }
 
-  .content {
+  .body {
     display: flex;
-    height: 100%;
+    flex: 1;
+    min-height: 0;
     overflow: hidden;
   }
 
-  nav {
-    display: flex;
-    flex-shrink: 0;
-    flex-grow: 0;
-    flex-direction: column;
-    padding: 20px 0 0 0;
-    flex-basis: 135px;
-    box-shadow: inset -1px 0 var(--color-modal-torrent-details-shadow);
-  }
-
-  a {
-    padding: 5px 10px 5px 25px;
-    font-size: 13px;
-    line-height: 1.25;
-    font-weight: 500;
-    color: var(--color-modal-tab-label);
-    text-decoration: none;
-    border-right: solid 1px transparent;
-  }
-
-  a.active {
-    border-color: var(--color-modal-tab-label-active);
-    color: var(--color-modal-tab-label-active);
-    font-weight: 700;
-  }
-
   .page-content {
-    flex-shrink: 1;
-    flex-grow: 1;
-    min-width: 0;
+    flex: 1;
     min-height: 0;
+    min-width: 0;
   }
 
   @media (max-width: 700px) {
-    .content {
+    .body {
       flex-direction: column;
-    }
-
-    nav {
-      flex-direction: row;
-      flex-basis: auto;
-      padding: 0 20px;
-      box-shadow: inset 0 -1px 0 var(--color-modal-torrent-details-shadow);
-    }
-
-    a {
-      border-right: 0;
-      border-bottom: solid 1px transparent;
-      padding: 5px;
     }
   }
 </style>

@@ -1,136 +1,55 @@
 <script>
   import { createEventDispatcher } from 'svelte';
 
-  export let value;
-  export let showLabel = false;
+  /** @type {number | null} 为 null 时表示多项优先级不一致（批量操作） */
+  export let value = 0;
   export let allowDisabled = false;
+  /** 文件列表等窄行使用短标签 */
+  export let compact = false;
+  /** @deprecated 保留以兼容旧用法 */
+  export const showLabel = false;
 
-  let element;
-  let label;
   const dispatch = createEventDispatcher();
 
-  $: {
-    switch (value) {
-      case 0:
-        label = 'Normal';
-        break;
-      case 1:
-        label = 'High';
-        break;
-      case -1:
-        label = 'Low';
-        break;
-      case -2:
-        label = "Don't download";
-        break;
-      default:
-        label = 'Invalid';
-        break;
-    }
-  }
+  $: options = allowDisabled
+    ? [
+        { label: compact ? '禁' : '不下载', value: -2, level: 'off' },
+        { label: '低', value: -1, level: 'low' },
+        { label: compact ? '普' : '普通', value: 0, level: 'normal' },
+        { label: '高', value: 1, level: 'high' },
+      ]
+    : [
+        { label: '低', value: -1, level: 'low' },
+        { label: compact ? '普' : '普通', value: 0, level: 'normal' },
+        { label: '高', value: 1, level: 'high' },
+      ];
 
-  $: {
-    element
-      ? element.style.setProperty('--levels', allowDisabled ? 4 : 3)
-      : undefined;
-  }
+  $: mixed = value === null || value === undefined;
 
-  const handleClick = () => {
-    let newPriority = value + 1;
-    if (newPriority > 1 && allowDisabled) {
-      newPriority = -2;
-    } else if (newPriority > 1) {
-      newPriority = -1;
+  const select = (next) => {
+    if (mixed || next !== value) {
+      dispatch('click', next);
     }
-    dispatch('click', newPriority);
   };
 </script>
 
 <div
-  class="priority-indicator"
-  on:click={handleClick}
-  bind:this={element}
-  title={showLabel ? undefined : label}
+  class="priority-select"
+  class:compact
+  class:priority-select--mixed={mixed}
+  role="group"
+  aria-label="优先级"
 >
-  <div class="slider level-{value}"></div>
-  {#if showLabel}<span class="label">{label}</span>{/if}
+  {#each options as opt (opt.value)}
+    <button
+      type="button"
+      class="priority-select__option priority-select__option--{opt.level}"
+      class:active={!mixed && value === opt.value}
+      aria-pressed={!mixed && value === opt.value}
+      title={opt.label}
+      on:click={() => select(opt.value)}
+    >
+      {opt.label}
+    </button>
+  {/each}
 </div>
-
-<style>
-  .priority-indicator {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-  }
-
-  .slider {
-    position: relative;
-    height: 8px;
-    min-width: 36px;
-    transition: opacity 0.25s;
-  }
-
-  .slider::before {
-    content: '';
-    height: 2px;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    transition: background-color 0.25s;
-    width: 100%;
-    background-color: var(--color);
-    opacity: 0.2;
-    position: absolute;
-  }
-
-  .slider::after {
-    content: '';
-    height: 100%;
-    top: 0;
-    transition:
-      background-color 0.25s,
-      left 0.25s,
-      transform 0.25s;
-    transform: translateX(-50%);
-    width: 2px;
-    background-color: var(--color);
-    position: absolute;
-    left: 50%;
-  }
-
-  .slider.level-1 {
-    --color: var(--color-priority-high);
-  }
-
-  .slider.level-0 {
-    --color: var(--color-priority-normal);
-  }
-
-  .slider.level--1 {
-    --color: var(--color-priority-low);
-  }
-
-  .slider.level--2 {
-    --color: var(--color-priority-off);
-  }
-
-  .slider.level-1::after {
-    left: calc(100% / (var(--levels) - 1) * (var(--levels) - 1));
-    transform: translateX(-100%);
-  }
-
-  .slider.level-0::after {
-    left: calc(100% / (var(--levels) - 1) * (var(--levels) - 2));
-    transform: translateX(-50%);
-  }
-
-  .slider.level--1::after {
-    left: calc(100% / (var(--levels) - 1) * (var(--levels) - 3));
-    transform: translateX(0%);
-  }
-
-  .slider.level--2::after {
-    left: calc(100% / (var(--levels) - 1) * (var(--levels) - 4));
-    transform: translateX(0%);
-  }
-</style>

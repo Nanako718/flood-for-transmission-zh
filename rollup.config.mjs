@@ -20,7 +20,12 @@ const production = !process.env.ROLLUP_WATCH;
 const __dirname = url.fileURLToPath(new URL('.', import.meta.url));
 
 if (!production) {
-  dotenv.config();
+  dotenv.config({ path: path.join(__dirname, '.env') });
+  const rpcUrl = new URL(
+    process.env.TRANSMISSION_PATH || '/transmission/rpc',
+    `${process.env.TRANSMISSION_SSL === 'true' ? 'https' : 'http'}://${process.env.TRANSMISSION_HOST || 'localhost'}:${process.env.TRANSMISSION_PORT || '9091'}`
+  );
+  console.log(`[dev] Transmission RPC（写入前端）: ${rpcUrl.href}`);
 }
 
 function serve() {
@@ -33,9 +38,9 @@ function serve() {
   return {
     writeBundle() {
       if (server) return;
-      server = childProcess.spawn('npm', ['run', 'serve', '--', '--dev'], {
-        stdio: ['ignore', 'inherit', 'inherit'],
-        shell: true,
+      server = childProcess.spawn('node', ['scripts/dev-server.mjs'], {
+        stdio: ['inherit', 'inherit', 'inherit'],
+        cwd: __dirname,
       });
 
       process.on('SIGTERM', toExit);
@@ -66,6 +71,11 @@ export default {
           src: 'src/helpers/constants/defaultConfig.json',
           dest: 'public',
           rename: 'config.json.defaults',
+        },
+        {
+          src: 'src/helpers/constants/defaultConfig.json',
+          dest: 'public',
+          rename: 'config.json',
         },
       ],
     }),

@@ -77,13 +77,15 @@
     on:change={selectFolder}
     iconName={iconName ?? (open ? 'FolderOpen' : 'FolderClosed')}
   />
-  <div
+  <button
+    type="button"
     class="path"
     class:no-action={!collapsible}
-    on:click={() => collapsible && (open = !open)}
+    disabled={!collapsible}
+    on:click={() => (open = !open)}
   >
     {folderName}
-  </div>
+  </button>
 </div>
 {#if open}
   {#each Object.keys(structure.folders) as nestedFolder (nestedFolder)}
@@ -107,7 +109,8 @@
         value={file.index}
         iconName="File"
       />
-      <div
+      <button
+        type="button"
         class="path"
         on:click={() =>
           selectedFiles.includes(file.index)
@@ -115,17 +118,20 @@
             : selectFile(file.index)}
       >
         {file.fileName}
-      </div>
+      </button>
       <div class="details">
         <span>{getFileSize(file).value}{getFileSize(file).size}</span>
         <span>{Math.round((file.bytesCompleted / file.length) * 100)}%</span>
-        <PriorityIndicator
-          value={getFilePriority(
-            $torrentDetails[TRANSMISSION_COLUMN_FILE_STATS][file.index]
-          )}
-          allowDisabled={true}
-          on:click={onSingleFilePrioChange.bind(this, file.index)}
-        />
+        <div class="file-priority-select">
+          <PriorityIndicator
+            compact
+            allowDisabled
+            value={getFilePriority(
+              $torrentDetails[TRANSMISSION_COLUMN_FILE_STATS][file.index]
+            )}
+            on:click={onSingleFilePrioChange.bind(this, file.index)}
+          />
+        </div>
       </div>
     </div>
   {/each}
@@ -166,13 +172,27 @@
   }
 
   .path {
-    overflow: hidden;
-    white-space: nowrap;
-    text-overflow: ellipsis;
+    background: none;
+    border: none;
+    color: inherit;
     cursor: pointer;
+    font: inherit;
+    overflow: hidden;
+    padding: 0;
+    text-align: left;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
   }
 
-  .path.no-action {
-    cursor: initial;
+  .path.no-action,
+  .path:disabled {
+    cursor: default;
+    pointer-events: none;
+  }
+
+  .path:focus-visible {
+    outline: 1px solid var(--color-modal-tab-label-active);
+    outline-offset: 2px;
   }
 </style>

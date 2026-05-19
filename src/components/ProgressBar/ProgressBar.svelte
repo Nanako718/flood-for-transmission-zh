@@ -17,7 +17,8 @@
 
   .fill-wrapper {
     background: var(--background-color);
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    min-width: 0;
     position: relative;
     height: 3px;
   }

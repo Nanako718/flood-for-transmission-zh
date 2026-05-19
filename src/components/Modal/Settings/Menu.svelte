@@ -3,77 +3,116 @@
   export let pages;
 </script>
 
-<div class="menu">
-  <h1>Settings</h1>
+<nav class="menu" aria-label="设置分类">
+  <h1>设置</h1>
 
   <ul class="items">
     {#each pages as page (page.id)}
-      <li
-        class:active={page.id === activePageId}
-        on:click={() => {
-          activePageId = page.id;
-        }}
-      >
-        {page.name}
+      <li>
+        <button
+          type="button"
+          class="item"
+          class:active={page.id === activePageId}
+          aria-current={page.id === activePageId ? 'page' : undefined}
+          on:click={() => {
+            activePageId = page.id;
+          }}
+        >
+          {page.name}
+        </button>
       </li>
     {/each}
   </ul>
-</div>
+</nav>
 
 <style>
   .menu {
-    overflow: hidden;
-    padding: 20px 0 0 20px;
+    background: rgba(var(--rgb-crust), 0.35);
+    border-right: 1px solid var(--color-modal-menu-border);
     display: flex;
     flex-direction: column;
-    line-height: 1.25;
-    border-right: solid 1px var(--color-modal-menu-border);
     grid-area: menu;
+    line-height: 1.25;
+    overflow: hidden;
+    padding: 16px 0 16px 12px;
   }
 
   h1 {
     color: var(--color-modal-header);
-    font-weight: 500;
-    font-size: 20px;
-    padding: 0 5px 5px;
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 12px;
+    padding: 0 8px;
   }
 
   ul {
-    font-weight: 500;
-    font-size: 13px;
-    color: var(--color-modal-tab-label);
+    list-style: none;
+    margin: 0;
+    padding: 0;
   }
 
   li {
-    display: block;
-    margin-right: 0;
-    padding: 5px;
-    border-right: solid 1px transparent;
-    transition:
-      border-color 0.25s,
-      color 0.25s;
-    cursor: pointer;
+    margin: 0 0 2px;
   }
 
-  li.active {
+  .item {
+    background: transparent;
+    border: none;
+    border-left: 3px solid transparent;
+    border-radius: 0 6px 6px 0;
+    color: var(--color-modal-tab-label);
+    cursor: pointer;
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    margin-right: 0;
+    padding: 8px 12px 8px 10px;
+    text-align: left;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s,
+      color 0.2s;
+    width: 100%;
+  }
+
+  .item:hover {
+    background: rgba(var(--rgb-surface1), 0.45);
+    color: var(--color-modal-header);
+  }
+
+  .item.active {
+    background: rgba(var(--rgb-mauve), 0.12);
+    border-left-color: var(--color-modal-tab-label-active);
     color: var(--color-modal-tab-label-active);
-    font-weight: 700;
-    border-color: var(--color-modal-tab-label-active);
+    font-weight: 600;
   }
 
   @media (max-width: 700px) {
     .menu {
-      padding: 20px 20px 0 20px;
+      border-bottom: 1px solid var(--color-modal-menu-border);
+      border-right: none;
+      padding: 12px 12px 8px;
     }
 
     ul {
       display: flex;
       flex-wrap: wrap;
+      gap: 6px;
     }
 
     li {
-      border-right: 0;
-      border-bottom: solid 1px transparent;
+      margin: 0;
+    }
+
+    .item {
+      border: 1px solid transparent;
+      border-left: 1px solid transparent;
+      border-radius: 6px;
+      padding: 6px 12px;
+    }
+
+    .item.active {
+      border-color: rgba(var(--rgb-mauve), 0.45);
     }
   }
 </style>

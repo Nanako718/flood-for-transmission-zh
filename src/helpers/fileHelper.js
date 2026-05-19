@@ -24,18 +24,14 @@ export const handleTorrentAddResponses = (responses) => {
   const duplicateResponses = responses
     .map((response) => response.arguments['torrent-duplicate'])
     .filter(Boolean);
-  const pluralize = responses.length > 1 ? 'torrents' : 'torrent';
-
   if (!duplicateResponses.length) {
-    alerts.add(`Succesfully added ${responses.length} ${pluralize}`);
+    alerts.add(`已成功添加 ${responses.length} 个种子`);
   } else if (duplicateResponses.length === responses.length) {
-    alerts.add(`All the uploaded ${pluralize} already exist`, 'negative');
+    alerts.add('上传的种子均已存在', 'negative');
   } else {
-    const pluralizeDuplicates =
-      duplicateResponses.length > 1 ? 'torrents' : 'torrent';
     const successCount = responses.length - duplicateResponses.length;
     alerts.add(
-      `Succesfully added ${successCount} ${pluralize}, the other ${duplicateResponses.length} ${pluralizeDuplicates} already exist`,
+      `已成功添加 ${successCount} 个种子，另有 ${duplicateResponses.length} 个已存在`,
       'negative'
     );
   }

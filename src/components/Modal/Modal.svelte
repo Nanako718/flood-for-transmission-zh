@@ -13,11 +13,13 @@
 
 {#if $modals && $modals.component}
   <div class="modal">
-    <div
+    <button
+      type="button"
       class="backdrop"
+      aria-label="关闭对话框"
       on:click={modals.close}
       transition:fade={{ duration: 250, easing: cubicInOut }}
-    ></div>
+    ></button>
     <div
       class="content"
       class:large={$modals.large}
@@ -40,13 +42,17 @@
 
   .backdrop {
     background: var(--color-modal-backdrop);
+    border: none;
+    cursor: default;
+    display: block;
     height: 100%;
+    padding: 0;
     width: 100%;
   }
 
   .content {
     background: var(--color-modal-background);
-    border-radius: 3px;
+    border-radius: var(--radius-md);
     max-height: 80%;
     max-width: 80%;
     width: 500px;

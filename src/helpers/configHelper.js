@@ -5,6 +5,12 @@ import {
 } from './constants/columns';
 import defaults from './constants/defaultConfig.json';
 
+function columnLabelMatches(uiColumn, label) {
+  return (
+    uiColumn.label === label || uiColumn.oldLabels?.includes(label)
+  );
+}
+
 const getConfigurationColumnsWithDefaults = (configColumns) => {
   if (!Array.isArray(configColumns)) {
     console.info(
@@ -36,21 +42,24 @@ const getConfigurationColumnsWithDefaults = (configColumns) => {
   return configColumns.map(({ id, ...configColumn }) => configColumn);
 };
 
-export default await fetch('./config.json')
-  .then((res) => {
+async function fetchConfigJson() {
+  for (const url of ['./config.json', './config.json.defaults']) {
+    const res = await fetch(url);
     if (res.ok) {
       return res.json();
-    } else {
-      console.info(
-        'No config.json found, using default values:\nSee https://github.com/johman10/flood-for-transmission#beta-customization'
-      );
     }
-  })
-  .then((config) => {
-    return { ...defaults, ...config };
-  })
-  .catch((e) => {
-    console.error('Something went wrong while fetching config.json', e);
+  }
+
+  console.info(
+    '未找到 config.json，已使用内置默认配置。\n详见 https://github.com/Nanako718/flood-for-transmission#配置'
+  );
+  return {};
+}
+
+export default await fetchConfigJson()
+  .then((config) => ({ ...defaults, ...config }))
+  .catch((error) => {
+    console.error('加载 config.json 失败', error);
     return defaults;
   })
   .then((configWithDefaults) => {
@@ -61,8 +70,8 @@ export default await fetch('./config.json')
     completeConfig.COLUMNS = Object.values(UI_COLUMN)
       .map((uiColumn) => {
         const configColumn =
-          safeConfigColumns.find(
-            (configColumn) => configColumn.label === uiColumn.label
+          safeConfigColumns.find((configColumn) =>
+            columnLabelMatches(uiColumn, configColumn.label)
           ) || {};
         return {
           ...uiColumn,
@@ -83,8 +92,8 @@ export default await fetch('./config.json')
       });
 
     completeConfig.SORT_COLUMN =
-      Object.values(UI_COLUMN).find(
-        (column) => column.label === completeConfig.SORT_COLUMN
+      Object.values(UI_COLUMN).find((column) =>
+        columnLabelMatches(column, completeConfig.SORT_COLUMN)
       )?.id || DEFAULT_SORT_COLUMN_ID;
     return completeConfig;
   });

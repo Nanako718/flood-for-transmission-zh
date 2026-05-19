@@ -1,0 +1,262 @@
+/*
+ * 种子列表按列配色（UI_COLUMN.id）
+ * 1 添加  2 根路径  3 备注  4 创建  5 完成  6 下载速度  7 已下载
+ * 8 错误  9 剩余时间  10 大小  11 哈希  12 标签  13 名称  14 下载连接
+ * 15 进度条  16 私有  17 队列  18 分享率  19 上传连接  20 状态  21 Tracker
+ * 22 上传速度  23 已上传  24 Tracker 下载  25 Tracker 做种  26 活动  27 进度
+ */
+
+/* —— 表头 —— */
+th[data-column-id='13'] {
+  color: rgb(var(--rgb-text));
+}
+
+th[data-column-id='6'] {
+  color: rgb(var(--rgb-green));
+}
+
+th[data-column-id='22'] {
+  color: rgb(var(--rgb-blue));
+}
+
+th[data-column-id='7'] {
+  color: rgb(var(--rgb-teal));
+}
+
+th[data-column-id='23'] {
+  color: rgb(var(--rgb-sapphire));
+}
+
+th[data-column-id='10'] {
+  color: rgb(var(--rgb-subtext1));
+}
+
+th[data-column-id='9'] {
+  color: rgb(var(--rgb-yellow));
+}
+
+th[data-column-id='27'] {
+  color: rgb(var(--rgb-lavender));
+}
+
+th[data-column-id='18'] {
+  color: rgb(var(--rgb-mauve));
+}
+
+th[data-column-id='8'] {
+  color: rgb(var(--rgb-red));
+}
+
+th[data-column-id='20'] {
+  color: rgb(var(--rgb-sky));
+}
+
+th[data-column-id='14'],
+th[data-column-id='24'] {
+  color: rgb(var(--rgb-sapphire));
+}
+
+th[data-column-id='19'],
+th[data-column-id='25'] {
+  color: rgb(var(--rgb-teal));
+}
+
+th[data-column-id='1'],
+th[data-column-id='4'],
+th[data-column-id='5'],
+th[data-column-id='26'] {
+  color: rgb(var(--rgb-overlay2));
+}
+
+th[data-column-id='2'],
+th[data-column-id='3'],
+th[data-column-id='11'],
+th[data-column-id='21'] {
+  color: rgb(var(--rgb-overlay1));
+}
+
+th[data-column-id='12'] {
+  color: rgb(var(--rgb-mauve));
+}
+
+th[data-column-id='15'] {
+  min-width: 350px;
+}
+
+
+th.header.sorting[data-column-id] {
+  font-weight: 700;
+}
+
+/* —— 数据行：默认 + 按列覆盖 —— */
+tr:not(.stopped):not(.error) td[data-column-id] {
+  color: rgb(var(--rgb-subtext0));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='13'] {
+  color: rgb(var(--rgb-text));
+  font-weight: 500;
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='6'] {
+  color: rgba(var(--rgb-green), 0.72);
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='22'] {
+  color: rgba(var(--rgb-blue), 0.72);
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='7'] {
+  color: rgb(var(--rgb-teal));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='23'] {
+  color: rgb(var(--rgb-sapphire));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='10'],
+tr:not(.stopped):not(.error) td[data-column-id='17'] {
+  color: rgb(var(--rgb-subtext1));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='9'] {
+  color: rgb(var(--rgb-yellow));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='27'] {
+  color: rgb(var(--rgb-lavender));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='18'] {
+  color: rgb(var(--rgb-mauve));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='20'] {
+  color: rgb(var(--rgb-sky));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='14'],
+tr:not(.stopped):not(.error) td[data-column-id='24'] {
+  color: rgb(var(--rgb-sapphire));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='19'],
+tr:not(.stopped):not(.error) td[data-column-id='25'] {
+  color: rgb(var(--rgb-teal));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='1'],
+tr:not(.stopped):not(.error) td[data-column-id='4'],
+tr:not(.stopped):not(.error) td[data-column-id='5'],
+tr:not(.stopped):not(.error) td[data-column-id='26'] {
+  color: rgb(var(--rgb-overlay2));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='2'],
+tr:not(.stopped):not(.error) td[data-column-id='3'],
+tr:not(.stopped):not(.error) td[data-column-id='11'],
+tr:not(.stopped):not(.error) td[data-column-id='16'],
+tr:not(.stopped):not(.error) td[data-column-id='21'],
+tr:not(.stopped):not(.error) td[data-column-id='8'] {
+  color: rgb(var(--rgb-overlay1));
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='6'] .speed.active {
+  color: var(--color-download);
+  font-weight: 600;
+}
+
+tr:not(.stopped):not(.error) td[data-column-id='22'] .speed.active {
+  color: var(--color-upload);
+  font-weight: 600;
+}
+
+/* —— 错误行 —— */
+tr.error td[data-column-id] {
+  color: var(--color-torrent-text-inactive);
+}
+
+tr.error td[data-column-id='8'] {
+  color: rgb(var(--rgb-red));
+  font-weight: 500;
+}
+
+/* —— 停止行 —— */
+tr.stopped td[data-column-id] {
+  color: var(--color-torrent-text-inactive);
+}
+
+tr.stopped td[data-column-id='13'] {
+  color: rgb(var(--rgb-subtext0));
+  font-weight: 500;
+}
+
+tr.stopped td[data-column-id='6'] {
+  color: rgba(var(--rgb-green), 0.45);
+}
+
+tr.stopped td[data-column-id='22'] {
+  color: rgba(var(--rgb-blue), 0.45);
+}
+
+/* —— 选中行（保留列色） —— */
+tr.selected td[data-column-id='13'] {
+  color: rgb(var(--rgb-text));
+  font-weight: 600;
+}
+
+tr.selected td[data-column-id='6'] {
+  color: var(--color-download);
+}
+
+tr.selected td[data-column-id='22'] {
+  color: var(--color-upload);
+}
+
+tr.selected td[data-column-id='7'] {
+  color: rgb(var(--rgb-teal));
+}
+
+tr.selected td[data-column-id='23'] {
+  color: rgb(var(--rgb-sapphire));
+}
+
+tr.selected td[data-column-id='9'] {
+  color: rgb(var(--rgb-yellow));
+}
+
+tr.selected td[data-column-id='10'],
+tr.selected td[data-column-id='17'] {
+  color: rgb(var(--rgb-subtext1));
+}
+
+tr.selected td[data-column-id='27'] {
+  color: rgb(var(--rgb-lavender));
+}
+
+tr.selected td[data-column-id='18'] {
+  color: rgb(var(--rgb-mauve));
+}
+
+tr.selected td[data-column-id='20'] {
+  color: rgb(var(--rgb-sky));
+}
+
+tr.selected td[data-column-id='14'],
+tr.selected td[data-column-id='24'] {
+  color: rgb(var(--rgb-sapphire));
+}
+
+tr.selected td[data-column-id='19'],
+tr.selected td[data-column-id='25'] {
+  color: rgb(var(--rgb-teal));
+}
+
+tr.selected.error td[data-column-id='8'] {
+  color: rgb(var(--rgb-red));
+}
+
+/* 标签列：字色由徽章控制，避免被列配色覆盖 */
+tr td[data-column-id='12'] {
+  color: unset;
+}

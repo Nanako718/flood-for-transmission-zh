@@ -1,10 +1,10 @@
-export const STATUS_STOPPED = 'Stopped';
-export const STATUS_CHECK_WAITING = 'Check waiting';
-export const STATUS_CHECKING = 'Checking';
-export const STATUS_DOWNLOAD_WAITING = 'Download waiting';
-export const STATUS_DOWNLOADING = 'Downloading';
-export const STATUS_SEED_WAITING = 'Seed waiting';
-export const STATUS_SEEDING = 'Seeding';
+export const STATUS_STOPPED = '已停止';
+export const STATUS_CHECK_WAITING = '等待校验';
+export const STATUS_CHECKING = '校验中';
+export const STATUS_DOWNLOAD_WAITING = '等待下载';
+export const STATUS_DOWNLOADING = '下载中';
+export const STATUS_SEED_WAITING = '排队做种';
+export const STATUS_SEEDING = '做种中';
 export const STATUSES = [
   STATUS_STOPPED,
   STATUS_CHECK_WAITING,

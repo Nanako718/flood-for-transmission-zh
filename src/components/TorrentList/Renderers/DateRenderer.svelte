@@ -2,7 +2,7 @@
   import { timeConfig } from '~helpers/stores';
 
   export let value;
-  export let torrentStatusClass = null;
+  export const torrentStatusClass = null;
   export const column = null;
 
   $: date = new Date(value * 1000);
@@ -39,7 +39,7 @@
     if (format24Hours) return '';
 
     const hour = date.getHours();
-    return hour > 11 ? 'p.m.' : 'a.m.';
+    return hour > 11 ? '下午' : '上午';
   }
 </script>
 

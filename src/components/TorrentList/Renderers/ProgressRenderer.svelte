@@ -46,8 +46,14 @@
     align-items: center;
     display: flex;
     width: 100%;
+    min-width: 0;
     z-index: 1;
     fill: var(--progess-color);
+  }
+
+  .progress-renderer :global(.fill-wrapper) {
+    flex: 1 1 0;
+    min-width: 0;
   }
 
   .progress-renderer :global(.icon) {
@@ -84,10 +90,14 @@
     --background-color: var(--color-progress-bar-error-background);
   }
 
-  .checking,
   .metadata {
     --progess-color: var(--color-progress-bar-metadata);
     --background-color: var(--color-progress-bar-metadata-background);
+  }
+
+  .checking {
+    --progess-color: var(--color-progress-bar-checking);
+    --background-color: var(--color-progress-bar-checking-background);
   }
 
   .selected.active,
@@ -95,6 +105,11 @@
   .selected.checking {
     --progess-color: var(--color-progress-bar-selected-active);
     --background-color: var(--color-progress-bar-selected-active-background);
+  }
+
+  .selected.completed {
+    --progess-color: var(--color-progress-bar-selected-upload);
+    --background-color: var(--color-progress-bar-selected-upload-background);
   }
 
   .selected.error,

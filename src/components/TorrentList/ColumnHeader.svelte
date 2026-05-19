@@ -1,10 +1,17 @@
 <script>
+  import { createEventDispatcher } from 'svelte';
   import { resizeableTable } from '~helpers/actions';
   import { uiColumns, sorting, tableHeaderConfig } from '~helpers/stores';
 
   export let id;
 
+  const dispatch = createEventDispatcher();
   const columnSizes = uiColumns.sizes;
+
+  let dragWidth = null;
+
+  $: displayWidth =
+    dragWidth ?? $columnSizes[id];
 
   const handleResize = (newWidth) => {
     const columnIndex = $uiColumns.findIndex((column) => column.id === id);
@@ -14,6 +21,17 @@
     uiColumns.set(newColumns);
   };
 
+  const handleResizeDrag = ({ columnWidth, tableWidth }) => {
+    dragWidth = columnWidth;
+    dispatch('resizing', { columnId: id, columnWidth, tableWidth });
+  };
+
+  const handleResizeEnd = (newWidth) => {
+    dragWidth = null;
+    dispatch('resized');
+    handleResize(newWidth);
+  };
+
   const handleClick = () => {
     sorting.updateToColumn(id);
   };
@@ -21,20 +39,32 @@
 
 {#if id}
   <th
+    data-column-id={id}
     class="header"
     class:sorting={id === $sorting.id}
     class:asc={$sorting.id === id && $sorting.direction === 'asc'}
     class:desc={$sorting.id === id && $sorting.direction === 'desc'}
+    class:resizing={dragWidth !== null}
     class:wrap={$tableHeaderConfig}
-    style="width: {$columnSizes[id]}px"
+    style="width: {displayWidth}px"
     on:click={handleClick}
   >
     {uiColumns.getColumnLabel(id)}
-    <span class="handle" use:resizeableTable={handleResize}></span>
+    <span
+      class="handle"
+      use:resizeableTable={{
+        onDrag: handleResizeDrag,
+        onEnd: handleResizeEnd,
+      }}
+    ></span>
   </th>
 {/if}
 
 <style>
+  .header.resizing {
+    transition: none;
+  }
+
   .header {
     font-size: 13px;
     white-space: nowrap;
@@ -58,9 +88,12 @@
   }
 
   .header.sorting {
-    color: var(--color-column-header-text-active);
     font-weight: 700;
     padding: 0 16px 0 8px;
+  }
+
+  .header.sorting:not([data-column-id]) {
+    color: var(--color-column-header-text-active);
   }
 
   .header.wrap {

@@ -1,11 +1,18 @@
 {
-  "name": "svelte-app",
+  "name": "flood-for-transmission-zh",
   "version": "1.0.0",
+  "description": "Flood for Transmission 中文版 — Transmission Web UI",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nanako718/flood-for-transmission.git"
+  },
+  "author": "Nanako718",
+  "license": "GPL-3.0",
   "scripts": {
     "build": "rm -rf public/build public/sw* public/workbox-* && rollup -c --silent",
     "postbuild": "workbox generateSW workbox-config.js",
     "start": "rollup -c -w",
-    "serve": "sirv public",
+    "serve": "node scripts/dev-server.mjs",
     "lint": "eslint \"./src/**/*.{js,svelte}\"",
     "lint:fix": "npm run lint -- --fix",
     "prettier": "prettier --write \"./src/**/*.{js,svelte}\""

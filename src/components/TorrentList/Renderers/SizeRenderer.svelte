@@ -30,15 +30,7 @@
   }
 
   .speed.active {
-    font-weight: 500;
-    color: var(--color-download);
-  }
-
-  .speed.active.upload {
-    color: var(--color-upload);
-  }
-
-  .selected.speed.active {
-    color: var(--color-size-text-selected);
+    font-weight: inherit;
+    color: inherit;
   }
 </style>

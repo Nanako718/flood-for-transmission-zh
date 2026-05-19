@@ -1,76 +1,17 @@
 <script>
-  import Icon from '~components/Icon';
-  import Dropdown from '~components/Dropdown';
   import Switch from '~components/Switch';
   import { Settings } from '~components/Modal';
-  import { getSize } from '~helpers/sizeHelper';
   import { session, modals } from '~helpers/stores';
-  import {
-    SESSION_COLUMN_UNITS,
-    SESSION_COLUMN_UNITS_SPEED,
-    SESSION_COLUMN_ALT_SPEED_ENABLED,
-  } from '~helpers/constants/columns';
+  import { SESSION_COLUMN_ALT_SPEED_ENABLED } from '~helpers/constants/columns';
 
-  const LIST_NAMES = ['download', 'upload'];
-  const downloadSpeedLimit = session.speedLimit('download');
-  const uploadSpeedLimit = session.speedLimit('upload');
-  let altSpeedEnabled = $session[SESSION_COLUMN_ALT_SPEED_ENABLED] || false;
+  $: altSpeedEnabled = !!$session[SESSION_COLUMN_ALT_SPEED_ENABLED];
 
-  $: speedLimitLists = LIST_NAMES.reduce((acc, listName) => {
-    const currentLimit =
-      listName === 'upload' ? $uploadSpeedLimit : $downloadSpeedLimit;
-    const perSize =
-      $session[SESSION_COLUMN_UNITS]?.[SESSION_COLUMN_UNITS_SPEED];
-    const speedLimits = [
-      1,
-      10,
-      100,
-      500,
-      1 * perSize,
-      2 * perSize,
-      5 * perSize,
-      10 * perSize,
-    ];
-
-    acc[listName] = [];
-
-    speedLimits.forEach((speedLimit) => {
-      const { value, size } = getSize(speedLimit, {
-        isSpeed: true,
-        startSize: 'kB',
-        perSize,
-      });
-
-      acc[listName].push({
-        name: `${value}${size}`,
-        value: speedLimit,
-        list: listName,
-        selected: currentLimit === speedLimit,
-      });
+  const openSpeedSettings = () => {
+    modals.open({
+      component: Settings,
+      large: true,
+      props: { activePageId: 'speed' },
     });
-
-    acc[listName].push({
-      name: 'Unlimited',
-      value: null,
-      list: listName,
-      selected: currentLimit === null,
-    });
-
-    return acc;
-  }, {});
-
-  const openSettings = () => {
-    modals.open({ component: Settings, large: true });
-  };
-
-  const handleSelect = ({ detail: option }) => {
-    const enabled = !!option.value;
-    session.updateSpeedLimit(
-      option.list,
-      enabled,
-      option.value,
-      altSpeedEnabled
-    );
   };
 
   const toggleAltSpeedEnabled = ({ detail: newAltSpeedEnabled }) => {
@@ -79,54 +20,72 @@
 </script>
 
 <div class="actions">
-  <Dropdown
-    header="Speed Limits"
-    on:select={handleSelect}
-    lists={speedLimitLists}
-  >
-    <div slot="trigger" class="trigger">
-      <Icon name="Limits" />
+  <div class="alt-speed-bar">
+    <div class="alt-speed-info">
+      <span class="alt-speed-title">备用速度</span>
+      <span class="alt-speed-hint">启用后使用设置中的备用限速</span>
     </div>
-    <div slot="bottom" class="alt-speed-row" on:click|stopPropagation>
-      Alternative speeds
-      <Switch
-        bind:checked={altSpeedEnabled}
-        on:change={toggleAltSpeedEnabled}
-      />
-    </div>
-  </Dropdown>
-  <Icon name="SettingsIcon" on:click={openSettings} />
+    <Switch
+      ariaLabel="备用速度限制"
+      checked={altSpeedEnabled}
+      on:change={toggleAltSpeedEnabled}
+    />
+  </div>
+  <button type="button" class="speed-settings-link" on:click={openSpeedSettings}>
+    详细速度设置…
+  </button>
 </div>
 
 <style>
   .actions {
-    fill: var(--color-text);
     display: flex;
-    padding: 5px;
-    margin-bottom: 5px;
+    flex-direction: column;
+    gap: 6px;
+    padding: 8px 8px 4px;
   }
 
-  .trigger {
+  .alt-speed-bar {
+    align-items: center;
+    background: rgba(var(--rgb-base), 0.45);
+    border: 1px solid var(--color-panel-border);
+    border-radius: var(--radius-md);
     display: flex;
-  }
-
-  .actions :global(.icon) {
-    padding: 10px;
-    height: 13px;
-    width: 13px;
-    box-sizing: initial;
-    transition: fill 0.25s;
-  }
-
-  .actions :global(.icon):hover {
-    fill: var(--color-active);
-  }
-
-  .alt-speed-row {
-    border-top: solid 1px rgba(41, 51, 65, 0.05);
-    padding: 10px 15px;
-    font-size: 13px;
-    display: flex;
+    gap: 10px;
     justify-content: space-between;
+    padding: 8px 10px;
+  }
+
+  .alt-speed-info {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .alt-speed-title {
+    color: var(--color-panel-active);
+    font-size: 12px;
+    font-weight: 600;
+  }
+
+  .alt-speed-hint {
+    color: var(--color-modal-text-light);
+    font-size: 10px;
+    line-height: 1.3;
+  }
+
+  .speed-settings-link {
+    background: transparent;
+    border: none;
+    color: var(--color-modal-link);
+    cursor: pointer;
+    font-size: 11px;
+    padding: 2px 4px;
+    text-align: left;
+    width: fit-content;
+  }
+
+  .speed-settings-link:hover {
+    text-decoration: underline;
   }
 </style>

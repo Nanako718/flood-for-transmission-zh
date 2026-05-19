@@ -2,7 +2,7 @@
   import Icon from '~components/Icon';
 
   export let value = false;
-  export let torrentStatusClass = null;
+  export const torrentStatusClass = null;
 </script>
 
 <div>

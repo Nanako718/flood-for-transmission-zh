@@ -1,6 +1,7 @@
 <script>
   import { onMount } from 'svelte';
   import Icon from '~components/Icon';
+  import Search from '~components/Search';
   import { Add, Remove } from '~components/Modal';
   import { torrents, modals, selectedTorrents, panel } from '~helpers/stores';
 
@@ -46,33 +47,76 @@
   };
 </script>
 
-<nav class="header">
+<nav class="header" aria-label="主工具栏">
   <div class="left">
-    <div class="group">
-      <button class="button" on:click={togglePanel}>
-        <Icon name="MenuIcon" viewBox="0 0 60 60" />
-      </button>
-      <button class="button" on:click={handleSelectAll}>
-        <Icon name="CheckAllIcon" viewBox="0 0 16 16" />
-      </button>
+    <button
+      type="button"
+      class="button button--menu"
+      on:click={togglePanel}
+      title="侧栏筛选"
+      aria-label="打开或关闭侧栏筛选"
+    >
+      <Icon name="MenuIcon" viewBox="0 0 60 60" />
+    </button>
+    <div class="search-slot">
+      <Search variant="topbar" />
     </div>
   </div>
+
   <div class="right">
-    <div class="group">
-      <button class="button" on:click={handleStart}>
-        <Icon name="StartIcon" />
+    <button
+      type="button"
+      class="button button--select"
+      on:click={handleSelectAll}
+      title="全选当前列表"
+      aria-label="全选"
+    >
+      <Icon name="CheckAllIcon" viewBox="0 0 16 16" />
+    </button>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <div class="transport-group" role="group" aria-label="传输控制">
+      <button
+        type="button"
+        class="transport-btn transport-btn--icon transport-btn--start"
+        on:click={handleStart}
+        title="开始"
+        aria-label="开始选中的种子"
+      >
+        <Icon name="StartIcon" viewBox="0 0 60 60" />
       </button>
-      <button class="button" on:click={handleStop}>
-        <Icon name="StopIcon" />
+      <button
+        type="button"
+        class="transport-btn transport-btn--icon transport-btn--stop"
+        on:click={handleStop}
+        title="停止"
+        aria-label="停止选中的种子"
+      >
+        <Icon name="StopIcon" viewBox="0 0 60 60" />
       </button>
     </div>
-    <div class="divider"></div>
-    <div class="group">
-      <button class="button" on:click={handleAdd}>
-        <Icon name="Add" />
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <div class="group group--library" role="group" aria-label="种子管理">
+      <button
+        type="button"
+        class="button button--add"
+        on:click={handleAdd}
+        title="添加种子"
+        aria-label="添加种子"
+      >
+        <Icon name="Add" viewBox="0 0 60 60" />
       </button>
-      <button class="button" on:click={handleRemove}>
-        <Icon name="Remove" />
+      <button
+        type="button"
+        class="button button--remove"
+        on:click={handleRemove}
+        title="移除种子"
+        aria-label="移除种子"
+      >
+        <Icon name="Remove" viewBox="0 0 60 60" />
       </button>
     </div>
   </div>
@@ -84,50 +128,164 @@
     border-bottom: 1px solid var(--color-top-bar-border);
     color: var(--color-top-bar-text);
     display: flex;
-    flex: 0 0 30px;
-    height: 30px;
+    align-items: center;
+    flex: 0 0 auto;
+    min-height: 40px;
+    height: 40px;
     justify-content: space-between;
-    fill: var(--color-top-bar-inactive);
-    transition: fill 0.25s;
+    gap: 8px;
+    padding: 0 4px 0 0;
+  }
+
+  .left {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 0;
+    gap: 4px;
+    padding-left: 2px;
+  }
+
+  .search-slot {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    height: 100%;
+    max-width: 520px;
+    min-width: 0;
+    padding: 0 10px 0 6px;
   }
 
   .right {
     display: flex;
-  }
-
-  .button > :global(.icon) {
-    height: 16px;
-    width: 16px;
+    align-items: center;
+    flex-shrink: 0;
+    height: 100%;
   }
 
   .group {
-    padding: 0 10px;
     display: flex;
+    align-items: center;
     height: 100%;
+    gap: 2px;
+    padding: 0 4px;
   }
 
   .button {
+    align-items: center;
     background-color: transparent;
     border: 0;
+    border-radius: var(--radius-sm);
+    box-sizing: border-box;
+    cursor: pointer;
     display: flex;
-    align-items: center;
+    fill: currentColor;
+    flex-shrink: 0;
+    height: 34px;
     justify-content: center;
+    margin: 0 1px;
+    max-height: 34px;
+    min-height: 34px;
     padding: 0;
-    width: 46px;
+    transition:
+      background-color 0.2s,
+      fill 0.2s,
+      transform 0.1s;
+    width: 38px;
+    max-width: 38px;
+    min-width: 38px;
   }
 
-  .button:hover {
-    background: rgba(51, 62, 74, 0.05);
-    box-shadow:
-      1px 0 rgba(51, 62, 74, 0.15),
-      -1px 0 rgba(51, 62, 74, 0.15);
-    fill: var(--color-top-bar-active);
+  .button:active {
+    transform: scale(0.94);
+  }
+
+  .button :global(.icon) {
+    display: block;
+    flex-shrink: 0;
+    height: 16px;
+    max-height: 16px;
+    max-width: 16px;
+    width: 16px;
+  }
+
+  .right :global(.transport-btn--icon) {
+    box-sizing: border-box;
+    flex-shrink: 0;
+    height: 34px;
+    max-height: 34px;
+    min-height: 34px;
+    margin: 0 1px;
+    max-width: 38px;
+    min-width: 38px;
+    padding: 0;
+    width: 38px;
+  }
+
+  .right :global(.transport-btn--icon) :global(.icon) {
+    display: block;
+    flex-shrink: 0;
+    height: 16px;
+    max-height: 16px;
+    max-width: 16px;
+    width: 16px;
+  }
+
+  .button--menu {
+    color: var(--color-toolbar-menu);
+    fill: var(--color-toolbar-menu);
+  }
+
+  .button--menu:hover {
+    background: var(--color-toolbar-menu-bg-hover);
+    fill: var(--color-top-bar-text);
+  }
+
+  .button--select {
+    color: var(--color-toolbar-select);
+    fill: var(--color-toolbar-select);
+  }
+
+  .button--select:hover {
+    background: var(--color-toolbar-select-bg-hover);
+  }
+
+  .button--add {
+    background: var(--color-toolbar-add-bg);
+    color: var(--color-toolbar-add);
+    fill: var(--color-toolbar-add);
+  }
+
+  .button--add:hover {
+    background: var(--color-toolbar-add-bg-hover);
+  }
+
+  .button--remove {
+    background: var(--color-toolbar-remove-bg);
+    color: var(--color-toolbar-remove);
+    fill: var(--color-toolbar-remove);
+  }
+
+  .button--remove:hover {
+    background: var(--color-toolbar-remove-bg-hover);
   }
 
   .divider {
-    background: rgba(122, 128, 128, 0.15);
-    height: 100%;
-    left: 0;
+    background: var(--color-top-bar-divider);
+    flex-shrink: 0;
+    height: 22px;
     width: 1px;
+    margin: 0 4px;
+  }
+
+  @media (max-width: 640px) {
+    .search-slot {
+      max-width: none;
+      padding-right: 4px;
+    }
+
+    .button {
+      width: 34px;
+    }
   }
 </style>

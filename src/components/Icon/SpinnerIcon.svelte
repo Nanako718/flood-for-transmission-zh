@@ -3,13 +3,11 @@
 </script>
 
 <script>
-  export let viewBox = null;
-
   num += 1;
   const id = num;
 </script>
 
-<svg on:click class="icon" viewBox="0 0 128 128">
+<svg aria-hidden="true" class="icon" viewBox="0 0 128 128">
   <defs>
     <mask
       id="spinner-{id}"

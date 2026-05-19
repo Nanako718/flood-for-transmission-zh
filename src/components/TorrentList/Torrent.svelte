@@ -299,7 +299,7 @@
   {#each $activeColumns
     .map((column) => rendererMap[column.id])
     .filter(Boolean) as { id, component, props } (id)}
-    <td>
+    <td data-column-id={id}>
       <svelte:component
         this={component}
         torrentStatusClass={generateTorrentStatusClass(torrent, selected)}
@@ -311,7 +311,6 @@
 
 <style>
   tr {
-    color: var(--color-torrent-text);
     font-size: 13px;
     height: 30px;
     cursor: pointer;
@@ -319,18 +318,18 @@
     -webkit-touch-callout: none;
   }
 
-  tr.stopped,
-  tr.error {
-    color: var(--color-torrent-text-inactive);
+  tr:hover:not(.selected) {
+    background-color: var(--color-torrent-background-hover);
   }
 
   tr.selected {
     background-color: var(--color-torrent-background-selected);
-    color: var(--color-torrent-text-selected);
+    box-shadow: inset 3px 0 0 var(--color-torrent-accent-selected);
   }
 
   tr.selected.error {
     background-color: var(--color-torrent-background-selected-error);
+    box-shadow: inset 3px 0 0 var(--color-torrent-accent-selected-error);
   }
 
   td {
@@ -338,5 +337,9 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+
+  td[data-column-id='15'] {
+    min-width: 350px;
   }
 </style>

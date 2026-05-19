@@ -1,7 +1,3 @@
-<script>
-  export let viewBox;
-</script>
-
 <svg
   class="icon"
   width="18"

@@ -30,6 +30,8 @@
   }
 
   main.panel {
+    background: var(--color-top-bar-border);
+    column-gap: 1px;
     grid-template: 'panel content' 1fr / 240px 1fr;
   }
 

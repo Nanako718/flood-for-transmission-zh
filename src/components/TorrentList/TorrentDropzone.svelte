@@ -41,7 +41,7 @@
 
     if (!allFilesValid) {
       alerts.add(
-        'Seems like some of the dropped files are invalid, try again with valid .torrent files',
+        '部分拖放的文件无效，请使用有效的 .torrent 文件重试',
         'negative'
       );
       return;
@@ -71,7 +71,7 @@
         if (!e) return;
 
         console.error(e);
-        alerts.add('Failed to add some torrent, please try again', 'negative');
+        alerts.add('添加种子失败，请重试', 'negative');
       });
   };
 
@@ -101,7 +101,7 @@
 >
   <div class="dropzone-content">
     <Icon name="Files" />
-    Drop here to add them to Transmission.
+    拖放到此处以添加到 Transmission。
   </div>
   <input type="file" id={id} bind:this={input} multiple />
 </label>
@@ -129,7 +129,7 @@
     width: calc(100% - 40px);
     height: calc(100% - 40px);
     position: absolute;
-    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='30' ry='30' stroke='rgb(112, 133, 158)' stroke-width='15' stroke-dasharray='25' stroke-dashoffset='0' stroke-linecap='butt'/%3e%3c/svg%3e");
+    background-image: url("data:image/svg+xml,%3csvg width='100%25' height='100%25' xmlns='http://www.w3.org/2000/svg'%3e%3crect width='100%25' height='100%25' fill='none' rx='30' ry='30' stroke='rgb(108, 112, 134)' stroke-width='15' stroke-dasharray='25' stroke-dashoffset='0' stroke-linecap='butt'/%3e%3c/svg%3e");
     border-radius: 30px;
   }
 

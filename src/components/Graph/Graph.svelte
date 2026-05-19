@@ -7,6 +7,7 @@
   import Icon from '~components/Icon';
   import Bytes from '~components/Graph/Bytes.svelte';
   import SpeedLimit from '~components/Graph/SpeedLimit.svelte';
+  import SpeedLimitPicker from '~components/SpeedLimitPicker';
   import { relativeTime } from '~helpers/timeHelper';
   import { getSize } from '~helpers/sizeHelper';
   import {
@@ -119,28 +120,40 @@
 </script>
 
 <div class="rates">
-  <div class="rate rate--download">
-    <Icon name="Download" />
-    <div class="data">
-      <div class="speed speed--download">
-        {displayDownloadSpeed}
-        <span class="speed__size">{displayDownloadSize}</span>
+  <SpeedLimitPicker direction="download">
+    <button
+      type="button"
+      class="rate rate--download rate--picker"
+      aria-label="设置下载限速，点击选择"
+    >
+      <Icon name="Download" />
+      <div class="data">
+        <div class="speed speed--download">
+          {displayDownloadSpeed}
+          <span class="speed__size">{displayDownloadSize}</span>
+        </div>
+        <Bytes direction="download" hidden={hovering} />
+        <SpeedLimit direction="download" hidden={hovering} />
       </div>
-      <Bytes direction="download" hidden={hovering} />
-      <SpeedLimit direction="download" hidden={hovering} />
-    </div>
-  </div>
-  <div class="rate rate--upload">
-    <Icon name="Upload" />
-    <div class="data">
-      <div class="speed speed--upload">
-        {displayUploadSpeed}
-        <span class="speed__size">{displayUploadSize}</span>
+    </button>
+  </SpeedLimitPicker>
+  <SpeedLimitPicker direction="upload">
+    <button
+      type="button"
+      class="rate rate--upload rate--picker"
+      aria-label="设置上传限速，点击选择"
+    >
+      <Icon name="Upload" />
+      <div class="data">
+        <div class="speed speed--upload">
+          {displayUploadSpeed}
+          <span class="speed__size">{displayUploadSize}</span>
+        </div>
+        <Bytes direction="upload" hidden={hovering} />
+        <SpeedLimit direction="upload" hidden={hovering} />
       </div>
-      <Bytes direction="upload" hidden={hovering} />
-      <SpeedLimit direction="upload" hidden={hovering} />
-    </div>
-  </div>
+    </button>
+  </SpeedLimitPicker>
   <div class="timestamp" class:hidden={!hovering}>
     {relativeTime(timestamp)}
   </div>
@@ -148,6 +161,8 @@
 
 <svg
   class="graph"
+  role="img"
+  aria-label="上传与下载速率图表"
   on:mousemove={handleMouseMove}
   on:mouseleave={handleMouseLeave}
 >
@@ -198,12 +213,50 @@
     line-height: 1;
   }
 
-  .rate--download {
+  .rates > :global(.wrapper:first-of-type) {
     grid-area: rate-download;
   }
 
-  .rate--upload {
+  .rates > :global(.wrapper:nth-of-type(2)) {
     grid-area: rate-upload;
+  }
+
+  .rates :global(.wrapper) {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .rates :global(.trigger-slot) {
+    display: block;
+    width: 100%;
+  }
+
+  .rate--picker {
+    background: rgba(var(--rgb-base), 0.35);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    color: inherit;
+    cursor: pointer;
+    display: flex;
+    font: inherit;
+    padding: 4px 6px;
+    text-align: left;
+    transition:
+      background-color 0.2s,
+      border-color 0.2s,
+      box-shadow 0.2s;
+    width: 100%;
+  }
+
+  .rate--picker:hover {
+    background: rgba(var(--rgb-surface0), 0.55);
+    border-color: var(--color-panel-border);
+    box-shadow: 0 0 0 1px rgba(var(--rgb-overlay0), 0.25);
+  }
+
+  .rate--picker:focus-visible {
+    outline: 2px solid var(--color-modal-tab-label-active);
+    outline-offset: 2px;
   }
 
   .rate {

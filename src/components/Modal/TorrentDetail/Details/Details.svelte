@@ -9,6 +9,7 @@
   import DateRenderer from '~components/TorrentList/Renderers/DateRenderer.svelte';
   import BooleanRenderer from '~components/TorrentList/Renderers/BooleanRenderer.svelte';
   import Badge from '~components/Badge';
+  import { getLabelInlineStyle } from '~helpers/labelColorHelper';
   import Input from '~components/Input';
   import Select from '~components/Select';
   import Checkbox from '~components/Checkbox';
@@ -33,9 +34,9 @@
   let loadingSubmit = false;
 
   const seedModeOptions = [
-    { label: 'Global', value: 0 },
-    { label: 'Custom', value: 1 },
-    { label: 'Unlimited', value: 2 },
+    { label: '全局', value: 0 },
+    { label: '自定义', value: 1 },
+    { label: '不限', value: 2 },
   ];
 
   $: {
@@ -106,260 +107,184 @@
   });
 </script>
 
-<form on:submit|preventDefault={handleSubmit} class="content">
-  <div class="info">
-    <h1 class="header no-padding-top">General</h1>
-
-    <div class="column column--label">Added</div>
-    <div class="column column--value">
+<form on:submit|preventDefault={handleSubmit} class="torrent-detail-page">
+  <section class="torrent-detail-section">
+    <h2>常规</h2>
+    <div class="torrent-detail-info-grid">
+      <div class="torrent-detail-label">添加时间</div>
+    <div class="torrent-detail-value">
       <DateRenderer value={$torrentDetails[TRANSMISSION_COLUMN.ADDED]} />
     </div>
 
-    <div class="column column--label">Done</div>
-    <div class="column column--value">
+    <div class="torrent-detail-label">完成时间</div>
+    <div class="torrent-detail-value">
       <DateRenderer value={$torrentDetails[TRANSMISSION_COLUMN.DONE]} />
     </div>
 
-    <div class="column column--label">Labels</div>
-    <div class="column column--value">
+    <div class="torrent-detail-label">标签</div>
+    <div class="torrent-detail-value torrent-detail-value--labels">
       {#if $torrentDetails[TRANSMISSION_COLUMN.LABELS]}
         {#each $torrentDetails[TRANSMISSION_COLUMN.LABELS] as label (label)}
-          <Badge>{label}</Badge>
+          <Badge inlineStyle={getLabelInlineStyle(label)}>{label}</Badge>
         {/each}
       {/if}
     </div>
-  </div>
-
-  <div class="inputs">
-    <div class="input-group">
-      <InputPath bind:value={location} label="Download location" />
     </div>
-  </div>
+  </section>
 
-  <div class="info">
-    <h1 class="header">Transfer</h1>
+  <section class="torrent-detail-section torrent-detail-form-block">
+    <InputPath bind:value={location} label="下载位置" />
+  </section>
 
-    <div class="column column--label">Download progress</div>
-    <div class="column column--value">
+  <section class="torrent-detail-section">
+    <h2>传输</h2>
+    <div class="torrent-detail-info-grid">
+      <div class="torrent-detail-label">下载进度</div>
+    <div class="torrent-detail-value">
       {Math.round(
         $torrentDetails[TRANSMISSION_COLUMN.DOWNLOAD_PROGRESS] * 10000
       ) / 100}%
     </div>
 
-    <div class="column column--label">Downloaded</div>
-    <div class="column column--value">{downloaded.value}{downloaded.size}</div>
+    <div class="torrent-detail-label">已下载</div>
+    <div class="torrent-detail-value">{downloaded.value}{downloaded.size}</div>
 
-    <div class="column column--label">Uploaded</div>
-    <div class="column column--value">{uploaded.value}{uploaded.size}</div>
+    <div class="torrent-detail-label">已上传</div>
+    <div class="torrent-detail-value">{uploaded.value}{uploaded.size}</div>
 
-    <div class="column column--label">Peers</div>
-    <div class="column column--value">
+    <div class="torrent-detail-label">下载连接</div>
+    <div class="torrent-detail-value">
       {$torrentDetails[TRANSMISSION_COLUMN.DOWNLOADING_FROM]}
-      of
+      /
       {$torrentDetails[TRANSMISSION_COLUMN.PEERS_CONNECTED]}
     </div>
 
-    <div class="column column--label">Seeds</div>
-    <div class="column column--value">
+    <div class="torrent-detail-label">上传连接</div>
+    <div class="torrent-detail-value">
       {$torrentDetails[TRANSMISSION_COLUMN.SEEDING_TO]}
-      of
+      /
       {$torrentDetails[TRANSMISSION_COLUMN.PEERS_CONNECTED]}
     </div>
-  </div>
+    </div>
+  </section>
 
-  <div class="inputs">
-    <div class="input-group">
+  <section class="torrent-detail-section torrent-detail-form-block">
+    <div class="torrent-detail-form-row">
       <Checkbox
         bind:checked={downloadLimitEnabled}
-        label="Download limit (kB/s)"
+        label="下载限速 (kB/s)"
       />
       <Input bind:value={downloadLimit} type="number" />
     </div>
 
-    <div class="input-group">
-      <Checkbox bind:checked={uploadLimitEnabled} label="Upload limit (kB/s)" />
+    <div class="torrent-detail-form-row">
+      <Checkbox bind:checked={uploadLimitEnabled} label="上传限速 (kB/s)" />
       <Input bind:value={uploadLimit} type="number" />
     </div>
 
-    <div class="input-group">
+    <div class="torrent-detail-form-row">
       <Checkbox
         bind:checked={honorsSessionLimits}
-        label="Honor session limits"
-        hint="Ignores the global session limit if disabled"
+        label="遵守全局限速"
+        hint="关闭后不遵守全局限速"
       />
     </div>
 
-    <div class="input-group">
+    <div class="torrent-detail-form-row">
       <Checkbox
         bind:checked={sequentialDownload}
-        label="Download sequentially"
-        hint="Download file pieces from start to end instead of at random"
+        label="顺序下载"
+        hint="按顺序下载文件块，而非随机下载"
       />
     </div>
 
-    <div class="input-group">
+    <div class="torrent-detail-form-row">
       <Input
         bind:value={peerLimit}
         type="number"
-        label="Maximum amount of peers"
+        label="Peer 上限"
       />
     </div>
 
-    <div class="input-group">
-      <Input bind:value={queuePosition} type="number" label="Queue position" />
+    <div class="torrent-detail-form-row">
+      <Input bind:value={queuePosition} type="number" label="队列位置" />
     </div>
 
-    <div class="input-group">
+    <div class="torrent-detail-form-row torrent-detail-form-row--split">
       <Select
         options={seedModeOptions}
         on:change={(event) => (seedIdleMode = event.detail)}
         value={seedIdleMode}
         direction="below"
-        label="Seed idle mode"
+        label="空闲做种"
       />
       <Input
         bind:value={seedIdleLimit}
         type="number"
-        label="Seed idle limit"
+        label="空闲做种限制"
         disabled={seedIdleMode !== 1}
       />
     </div>
 
-    <div class="input-group">
+    <div class="torrent-detail-form-row torrent-detail-form-row--split">
       <Select
         options={seedModeOptions}
         on:change={(event) => (seedRatioMode = event.detail)}
         value={seedRatioMode}
         direction="below"
-        label="Seed ratio mode"
+        label="分享率模式"
       />
       <Input
         bind:value={seedRatioLimit}
         type="number"
-        label="Seed ratio limit"
+        label="分享率限制"
         step="0.01"
         disabled={seedRatioMode !== 1}
       />
     </div>
-  </div>
+  </section>
 
-  <div class="info">
-    <h1 class="header">Torrent</h1>
-
-    <div class="column column--label">Comment</div>
-    <div class="column column--value">
+  <section class="torrent-detail-section">
+    <h2>种子信息</h2>
+    <div class="torrent-detail-info-grid">
+      <div class="torrent-detail-label">备注</div>
+    <div class="torrent-detail-value">
       {$torrentDetails[TRANSMISSION_COLUMN.COMMENT]}
     </div>
 
-    <div class="column column--label">Creation Date</div>
-    <div class="column column--value">
+    <div class="torrent-detail-label">创建日期</div>
+    <div class="torrent-detail-value">
       <DateRenderer value={$torrentDetails[TRANSMISSION_COLUMN.CREATED]} />
     </div>
 
-    <div class="column column--label">Hash</div>
-    <div class="column column--value">
+    <div class="torrent-detail-label">哈希</div>
+    <div class="torrent-detail-value">
       {$torrentDetails[TRANSMISSION_COLUMN.HASH]}
     </div>
 
-    <div class="column column--label">Size</div>
-    <div class="column column--value">{size.value}{size.size}</div>
+    <div class="torrent-detail-label">大小</div>
+    <div class="torrent-detail-value">{size.value}{size.size}</div>
 
-    <div class="column column--label">Private</div>
-    <div class="column column--value">
+    <div class="torrent-detail-label">私有</div>
+    <div class="torrent-detail-value">
       <BooleanRenderer value={$torrentDetails[TRANSMISSION_COLUMN.PRIVATE]} />
     </div>
 
-    <div class="column column--label">Error text</div>
-    <div class="column column--value">
+    <div class="torrent-detail-label">错误信息</div>
+    <div class="torrent-detail-value">
       {$torrentDetails[TRANSMISSION_COLUMN.ERROR_STRING]}
     </div>
-  </div>
+    </div>
+  </section>
 
-  <div class="buttons">
+  <div class="torrent-detail-page-buttons">
     <Button type="button" priority="tertiary" on:click={setServerValues}>
-      Reset
+      重置
     </Button>
     <Button type="submit" priority="primary" loading={loadingSubmit}>
-      Save config
+      保存配置
     </Button>
   </div>
 </form>
 
-<style>
-  .content {
-    overflow-y: auto;
-    font-size: 13px;
-    color: var(--color-modal-text);
-    line-height: 16px;
-    padding: 20px 25px;
-    height: 100%;
-  }
 
-  /* To add empty space in the bottom when scrolling */
-  .content::after {
-    content: '';
-    height: 25px;
-  }
-
-  .info {
-    display: grid;
-    grid-gap: 1px 0;
-    grid-auto-rows: min-content;
-    grid-template-columns: repeat(2, minmax(136px, max-content));
-  }
-
-  .header {
-    font-size: inherit;
-    color: var(--color-modal-details-header);
-    font-weight: 700;
-    grid-column: 1 / 3;
-  }
-
-  .header.no-padding-top {
-    padding-top: 0;
-  }
-
-  .inputs {
-    padding-top: 10px;
-  }
-
-  .input-group {
-    padding-bottom: 15px;
-    display: flex;
-    gap: 5px;
-    flex-direction: column;
-  }
-
-  .inputs :global(.input-container) {
-    margin-bottom: 0;
-  }
-
-  .column.column--label {
-    padding-right: 15px;
-    font-weight: 500;
-    white-space: nowrap;
-    grid-column: 1;
-  }
-
-  .column.column--value {
-    grid-column: 2;
-    display: flex;
-    flex-wrap: wrap;
-    column-gap: 10px;
-    row-gap: 5px;
-    word-break: break-all;
-  }
-
-  .column.column--value > :global(.badge) {
-    margin-left: 0;
-  }
-
-  .buttons {
-    flex-grow: 1;
-    align-items: flex-end;
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 10px;
-  }
-</style>

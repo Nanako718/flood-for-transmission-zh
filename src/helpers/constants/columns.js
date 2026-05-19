@@ -202,113 +202,138 @@ export const SESSION_STATS_TOTAL_UPLOAD = 'uploadedBytes';
 export const SESSION_STATS_TOTAL_DOWNLOAD = 'downloadedBytes';
 
 export const UI_COLUMN_ADDED = {
-  label: 'Added',
+  label: '添加时间',
+  oldLabels: ['Added'],
   id: 1,
 };
 export const UI_COLUMN_BASE_PATH = {
-  label: 'Base Path',
+  label: '保存路径',
+  oldLabels: ['Base Path', '根路径'],
   id: 2,
 };
 export const UI_COLUMN_COMMENT = {
-  label: 'Comment',
+  label: '备注',
+  oldLabels: ['Comment'],
   id: 3,
 };
 export const UI_COLUMN_CREATION_DATE = {
-  label: 'Creation Date',
+  label: '创建日期',
+  oldLabels: ['Creation Date'],
   id: 4,
 };
 export const UI_COLUMN_DONE = {
-  label: 'Done',
+  label: '完成时间',
+  oldLabels: ['Done'],
   id: 5,
 };
 export const UI_COLUMN_DOWNLOAD_SPEED = {
-  label: 'Download Speed',
+  label: '下载速度',
+  oldLabels: ['Download Speed'],
   id: 6,
 };
 export const UI_COLUMN_DOWNLOADED = {
-  label: 'Downloaded',
+  label: '已下载',
+  oldLabels: ['Downloaded'],
   id: 7,
 };
 export const UI_COLUMN_ERROR = {
-  label: 'Error',
+  label: '错误',
+  oldLabels: ['Error'],
   id: 8,
 };
 export const UI_COLUMN_ETA = {
-  label: 'ETA',
+  label: '剩余时间',
+  oldLabels: ['ETA'],
   id: 9,
 };
 export const UI_COLUMN_FILE_SIZE = {
-  label: 'File Size',
+  label: '文件大小',
+  oldLabels: ['File Size'],
   id: 10,
 };
 export const UI_COLUMN_HASH = {
-  label: 'Hash',
+  label: '哈希',
+  oldLabels: ['Hash'],
   id: 11,
 };
 export const UI_COLUMN_LABELS = {
-  label: 'Labels',
+  label: '标签',
+  oldLabels: ['Labels'],
   id: 12,
 };
 export const UI_COLUMN_NAME = {
-  label: 'Name',
+  label: '名称',
+  oldLabels: ['Name'],
   id: 13,
 };
 export const UI_COLUMN_PEERS = {
-  label: 'Downloading from',
-  oldLabels: ['Peers'],
+  label: '下载连接',
+  oldLabels: ['Downloading from', 'Peers', '正在下载自'],
   id: 14,
 };
 export const UI_COLUMN_PROGRESS_BAR = {
-  label: 'Progress',
+  label: '进度条',
+  oldLabels: ['Progress', '进度'],
   id: 15,
 };
 export const UI_COLUMN_PRIVATE = {
-  label: 'Private',
+  label: '私有',
+  oldLabels: ['Private'],
   id: 16,
 };
 export const UI_COLUMN_QUEUE_POSITION = {
-  label: 'Queue Position',
+  label: '队列位置',
+  oldLabels: ['Queue Position'],
   id: 17,
 };
 export const UI_COLUMN_RATIO = {
-  label: 'Ratio',
+  label: '分享率',
+  oldLabels: ['Ratio'],
   id: 18,
 };
 export const UI_COLUMN_SEEDS = {
-  label: 'Seeding to',
-  oldLabels: ['Seeds'],
+  label: '上传连接',
+  oldLabels: ['Seeding to', 'Seeds', '正在做种给'],
   id: 19,
 };
 export const UI_COLUMN_STATUS = {
-  label: 'Status',
+  label: '状态',
+  oldLabels: ['Status'],
   id: 20,
 };
 export const UI_COLUMN_TRACKERS = {
-  label: 'Trackers',
+  label: 'Tracker',
+  oldLabels: ['Trackers', '跟踪器'],
   id: 21,
 };
 export const UI_COLUMN_UPLOAD_SPEED = {
-  label: 'Upload Speed',
+  label: '上传速度',
+  oldLabels: ['Upload Speed'],
   id: 22,
 };
 export const UI_COLUMN_UPLOADED = {
-  label: 'Uploaded',
+  label: '已上传',
+  oldLabels: ['Uploaded'],
   id: 23,
 };
 export const UI_COLUMN_TOTAL_LEECHERS = {
-  label: 'Total Leechers',
+  label: 'Tracker 下载',
+  oldLabels: ['Total Leechers', '下载者总数'],
   id: 24,
 };
 export const UI_COLUMN_TOTAL_SEEDERS = {
-  label: 'Total Seeders',
+  label: 'Tracker 做种',
+  oldLabels: ['Total Seeders', '做种者总数'],
   id: 25,
 };
 export const UI_COLUMN_ACTIVITY = {
-  label: 'Activity',
+  label: '活动',
+  oldLabels: ['Activity'],
   id: 26,
 };
 export const UI_COLUMN_PERCENT_COMPLETE = {
-  label: 'Percent Complete',
+  label: '进度',
+  oldLabels: ['Percent Complete', '完成百分比'],
   id: 27,
 };
 

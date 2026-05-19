@@ -73,4 +73,4 @@
   export let name;
 </script>
 
-<svelte:component this={iconMap[name]} viewBox={viewBox} on:click />
+<svelte:component this={iconMap[name]} viewBox={viewBox} />

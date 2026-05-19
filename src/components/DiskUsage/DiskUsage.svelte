@@ -32,7 +32,7 @@
 {#if $diskUsage && $session[SESSION_COLUMN_RPC_VERSION] >= 15}
   {#await data then pathSpaces}
     <div class="wrapper">
-      <h2>Disk usage</h2>
+      <h2>磁盘用量</h2>
       <ul>
         {#each Object.entries(pathSpaces) as [path, progress] (path)}
           <li class="path-item">

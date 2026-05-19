@@ -80,13 +80,15 @@
       />
     {:else}{console.error(`Invalid type received, ${type}`)}{/if}
     {#each addons as addon, index (addon.iconName)}
-      <div
+      <button
+        type="button"
         class="addon"
-        on:click={!disabled ? addon.onClick : undefined}
+        disabled={disabled || !addon.onClick}
+        on:click={addon.onClick}
         style="--index: {index}; --icon-size: {addon.iconSize};"
       >
         <Icon name={addon.iconName} />
-      </div>
+      </button>
     {/each}
   </div>
   {#if hint}<span class="hint">{hint}</span>{/if}
@@ -116,6 +118,9 @@
   }
 
   .input-wrapper .addon {
+    background: transparent;
+    border: none;
+    border-left: solid 1px var(--color-input-addon-border);
     position: absolute;
     right: calc(var(--index) * 34px);
     top: 0;
@@ -124,7 +129,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    border-left: solid 1px var(--color-input-addon-border);
     transition:
       fill 125ms,
       border 125ms;
@@ -149,7 +153,7 @@
     height: 34px;
     outline: none;
     padding: 0 calc(var(--addon-count) * 32px + 12px) 0 12px;
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     transition-property: background-color, border-color, color;
     transition-duration: 0.25s;
     transition-timing-function: ease-in-out;

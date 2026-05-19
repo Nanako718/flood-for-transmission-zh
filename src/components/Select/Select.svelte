@@ -49,7 +49,9 @@
   }}
 >
   {#if label}
-    <div class="label" on:click={() => (open = !open)}>{label}</div>
+    <button type="button" class="label" on:click={() => (open = !open)}>
+      {label}
+    </button>
   {/if}
 
   <Button on:click={() => (open = !open)} priority="quaternary">
@@ -71,9 +73,13 @@
       transition:fly={{ duration: 125, y: -20 }}
     >
       {#each options as option (option.label)}
-        <div class="option" on:click={handleChange(option.value)}>
+        <button
+          type="button"
+          class="option"
+          on:click={() => handleChange(option.value)}
+        >
           {option.label}
-        </div>
+        </button>
       {/each}
     </div>
   {/if}
@@ -94,13 +100,19 @@
   }
 
   .label {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
     display: block;
     font-size: 13px;
     margin-bottom: 3px;
     overflow: hidden;
+    padding: 0;
+    text-align: left;
     text-overflow: ellipsis;
     white-space: nowrap;
-    cursor: pointer;
+    width: 100%;
   }
 
   .content {
@@ -125,7 +137,7 @@
     position: absolute;
     z-index: 10;
     background-color: var(--color-select-option-background);
-    color: #fff;
+    color: var(--color-select-option-text);
     padding: 9px 0;
     border-radius: 5px;
   }
@@ -139,10 +151,16 @@
   }
 
   .option {
+    background: transparent;
+    border: none;
+    color: inherit;
     cursor: pointer;
-    padding: 6px 12px;
-    transition: background-color 0.125s;
+    display: block;
     font-size: 14px;
+    padding: 6px 12px;
+    text-align: left;
+    transition: background-color 0.125s;
+    width: 100%;
   }
 
   .option:hover {

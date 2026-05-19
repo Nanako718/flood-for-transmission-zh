@@ -6,6 +6,21 @@ import {
   UI_COLUMN,
 } from '~helpers/constants/columns';
 
+const MIN_COLUMN_WIDTHS = {
+  [UI_COLUMN.PROGRESS_BAR.id]: 350,
+  [UI_COLUMN.NAME.id]: 240,
+};
+
+function applyColumnWidthFloors(columns) {
+  return columns.map((column) => {
+    const minWidth = MIN_COLUMN_WIDTHS[column.id];
+    if (minWidth && column.width < minWidth) {
+      return { ...column, width: minWidth };
+    }
+    return column;
+  });
+}
+
 const UI_COLUMNS_STORAGE_KEY = 'ui-columns';
 const UI_COLUMN_VALUES = Object.values(UI_COLUMN);
 const UI_COLUMN_IDS = UI_COLUMN_VALUES.map((column) => column.id);
@@ -39,7 +54,10 @@ function migrateStoredColumns(storedColumns) {
     return !storedColumnIds.includes(id);
   });
 
-  const newColumns = [...cleanedStoredColumns, ...missingColumns];
+  const newColumns = applyColumnWidthFloors([
+    ...cleanedStoredColumns,
+    ...missingColumns,
+  ]);
   storeColumns(newColumns);
   return newColumns;
 }
@@ -53,7 +71,7 @@ function getUiColumns() {
     return migrateStoredColumns(columns);
     // eslint-disable-next-line no-unused-vars
   } catch (e) {
-    return config.COLUMNS;
+    return applyColumnWidthFloors(config.COLUMNS);
   }
 }
 
@@ -72,8 +90,9 @@ function uiColumnStore() {
     subscribe,
     update,
     set: (columns) => {
-      storeColumns(columns);
-      set(columns);
+      const normalized = applyColumnWidthFloors(columns);
+      storeColumns(normalized);
+      set(normalized);
     },
     active: derived({ subscribe, update, set }, ($columns) =>
       $columns.filter((column) => column.enabled)

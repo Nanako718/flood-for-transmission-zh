@@ -7,6 +7,7 @@
 
   export let label = null;
   export let checked = false;
+  export let disabled = false;
   export let group = null;
   export let value = null;
   export let hint = null;
@@ -15,8 +16,8 @@
   const id = `input-checkbox-${num}`;
 </script>
 
-<div class="checkbox">
-  <label for={id} tabindex="0">
+<div class="checkbox" class:disabled={disabled}>
+  <label for={id}>
     {#if group && value}
       <input
         type="checkbox"
@@ -29,7 +30,13 @@
         <Icon name="CheckboxCheckmark" viewBox="0 0 18 18" />
       </div>
     {:else}
-      <input type="checkbox" bind:checked={checked} id={id} on:change />
+      <input
+        type="checkbox"
+        bind:checked={checked}
+        {disabled}
+        id={id}
+        on:change
+      />
       <div class="indicator" class:checked={checked}>
         <Icon name="CheckboxCheckmark" viewBox="0 0 18 18" />
       </div>
@@ -57,7 +64,7 @@
   }
 
   .indicator {
-    border-radius: 4px;
+    border-radius: var(--radius-xs);
     background: var(--color-checkbox-background);
     border: 1px solid var(--color-checkbox-border);
     height: 18px;
@@ -101,5 +108,10 @@
     font-size: 12px;
     display: block;
     margin-top: 5px;
+  }
+
+  .checkbox.disabled label {
+    cursor: not-allowed;
+    opacity: 0.5;
   }
 </style>

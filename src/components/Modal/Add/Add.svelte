@@ -55,7 +55,7 @@
 
     // Set errors for the first invalid input
     inputs[invalidIndex].setCustomValidity(
-      'Invalid URL, magnet or torrent hash'
+      '无效的 URL、磁力链接或种子哈希'
     );
     formElement.reportValidity();
     return true;
@@ -106,7 +106,7 @@
         if (e) {
           console.error(e);
           alerts.add(
-            'Failed to add some torrent, please try again',
+            '添加种子失败，请重试',
             'negative'
           );
         }
@@ -115,12 +115,28 @@
   };
 </script>
 
-<h1>Add Torrents</h1>
+<h1>添加种子</h1>
 <ul class="tabs">
-  <li on:click={() => (tab = 'url')} class:active={tab === 'url'}>
-    By URL or hash
+  <li>
+    <button
+      type="button"
+      class="tab"
+      class:active={tab === 'url'}
+      on:click={() => (tab = 'url')}
+    >
+      通过 URL 或哈希
+    </button>
   </li>
-  <li on:click={() => (tab = 'file')} class:active={tab === 'file'}>By File</li>
+  <li>
+    <button
+      type="button"
+      class="tab"
+      class:active={tab === 'file'}
+      on:click={() => (tab = 'file')}
+    >
+      通过文件
+    </button>
+  </li>
 </ul>
 
 <div class="content" class:loading-initial={loadingInitial}>
@@ -128,15 +144,15 @@
   <form on:submit|preventDefault={handleSubmit}>
     {#if tab === 'url'}
       <InputMultiple
-        label="Torrents"
+        label="种子"
         class="torrent-url-hash-input"
-        placeholder="Torrent URL, Magnet Link or hash"
+        placeholder="种子 URL、磁力链接或哈希"
         bind:values={fileNames}
         required={!cleanFileNames.length}
       />
     {:else if tab === 'file'}
       <InputFile
-        label="Torrents"
+        label="种子"
         bind:files={files}
         multiple
         required
@@ -144,18 +160,18 @@
       />
     {/if}
     <InputPath
-      label="Destination"
-      placeholder="Destination"
+      label="保存位置"
+      placeholder="保存位置"
       bind:value={destination}
       pattern={PATH_VALIDATION_REGEX}
-      validationMessage="Destination must be an absolute path."
+      validationMessage="保存位置必须是绝对路径。"
       required
     />
     <div class="button-group">
-      <Checkbox label="Start Torrent" bind:checked={start} />
-      <Button priority="tertiary" on:click={modals.close}>Cancel</Button>
+      <Checkbox label="添加后立即开始" bind:checked={start} />
+      <Button priority="tertiary" on:click={modals.close}>取消</Button>
       <Button priority="primary" loading={loadingSubmit} type="submit">
-        Add Torrent
+        添加种子
       </Button>
     </div>
   </form>
@@ -179,19 +195,28 @@
   }
 
   li {
-    cursor: pointer;
     display: inline-block;
     margin-right: 15px;
+    padding: 0;
+  }
+
+  .tab {
+    background: none;
+    border: none;
+    color: inherit;
+    cursor: pointer;
+    display: inline-block;
+    font: inherit;
     padding: 5px 0 10px 0;
     position: relative;
   }
 
-  li.active {
+  .tab.active {
     color: var(--color-modal-tab-label-active);
     font-weight: 700;
   }
 
-  li.active::after {
+  .tab.active::after {
     background-color: var(--color-modal-tab-label-active);
     bottom: 0;
     content: '';

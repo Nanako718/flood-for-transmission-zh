@@ -10,50 +10,54 @@ export function relativeTime(timestamp) {
   let timeLeft = Date.now() - timestamp;
 
   const days = Math.floor(timeLeft / MS_PER_DAY);
-  const daysText = days === 1 ? 'day' : 'days';
+  const daysText = '天';
   timeLeft %= MS_PER_DAY;
 
   const hours = Math.floor(timeLeft / MS_PER_HOUR);
-  const hoursText = hours === 1 ? 'hour' : 'hours';
+  const hoursText = '小时';
   timeLeft %= MS_PER_HOUR;
 
   if (days && hours) {
-    return `${days} ${daysText} and ${hours} ${hoursText} ago`;
+    return `${days}${daysText}${hours}${hoursText}前`;
   }
   if (days) {
-    return `${days} ${daysText} ago`;
+    return `${days}${daysText}前`;
   }
 
   const minutes = Math.floor(timeLeft / MS_PER_MINUTE);
-  const minutesText = minutes === 1 ? 'minute' : 'minutes';
+  const minutesText = '分钟';
   timeLeft %= MS_PER_MINUTE;
 
   if (hours && minutes) {
-    return `${hours} ${hoursText} and ${minutes} ${minutesText} ago`;
+    return `${hours}${hoursText}${minutes}${minutesText}前`;
   }
   if (hours) {
-    return `${hours} ${hoursText} ago`;
+    return `${hours}${hoursText}前`;
   }
 
   const seconds = Math.floor(timeLeft / MS_PER_SECOND);
-  const secondsText = seconds === 1 ? 'second' : 'seconds';
+  const secondsText = '秒';
   timeLeft %= MS_PER_SECOND;
 
   if (minutes && seconds) {
-    return `${minutes} ${minutesText} and ${seconds} ${secondsText} ago`;
+    return `${minutes}${minutesText}${seconds}${secondsText}前`;
   }
   if (minutes) {
-    return `${minutes} ${minutesText} ago`;
+    return `${minutes}${minutesText}前`;
   }
 
   if (seconds) {
-    return `${seconds} ${secondsText} ago`;
+    return `${seconds}${secondsText}前`;
   }
-  return 'now';
+  return '刚刚';
 }
 
 export function minutesToTime(minutes) {
-  let minutesLeft = minutes;
+  if (minutes == null || Number.isNaN(Number(minutes))) {
+    return '00:00';
+  }
+
+  let minutesLeft = Number(minutes);
 
   let hours = Math.floor(minutesLeft / MINUTES_PER_HOUR);
   minutesLeft %= MINUTES_PER_HOUR;
@@ -74,6 +78,10 @@ export function minutesToTime(minutes) {
 }
 
 export function timeToMinutes(time) {
+  if (!time || typeof time !== 'string') {
+    return 0;
+  }
+
   const splitTime = time.split(':');
   const hours = parseInt(splitTime[0], 10);
   const minutes = parseInt(splitTime[1], 10);

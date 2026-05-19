@@ -20,6 +20,7 @@ import {
   TRANSMISSION_COLUMN_MAGNET_LINK,
 } from '~helpers/constants/columns';
 import { sorting } from '~helpers/stores/sorting';
+import { torrentPagination } from '~helpers/stores/torrentPagination';
 import {
   transmissionColumns,
   uiColumns,
@@ -37,9 +38,11 @@ import { trackerStripper } from '~helpers/trackerHelper';
 import { copyToClipboard } from '../copyHelper';
 
 const TORRENT_FETCHING_TIMEOUT = 1000;
+const MAX_TORRENT_ERRORS = 8;
 
 const transmission = new Transmission();
 let updateTorrentTimeout;
+let torrentErrorCount = 0;
 const store = writable([]);
 let previousActiveColumns = null;
 
@@ -107,6 +110,31 @@ const sorted = derived(
   }
 );
 
+const paginated = derived(
+  [sorted, torrentPagination],
+  ([$sorted, $pagination]) => {
+    const { pageSize } = $pagination;
+    let { page } = $pagination;
+    const total = $sorted.length;
+    const totalPages = Math.max(1, Math.ceil(total / pageSize) || 1);
+
+    if (page > totalPages) page = totalPages;
+    if (page < 1) page = 1;
+
+    const start = (page - 1) * pageSize;
+
+    return {
+      items: $sorted.slice(start, start + pageSize),
+      page,
+      pageSize,
+      total,
+      totalPages,
+      rangeStart: total === 0 ? 0 : start + 1,
+      rangeEnd: Math.min(start + pageSize, total),
+    };
+  }
+);
+
 function getRecentlyActiveTorrents() {
   if (updateTorrentTimeout) {
     clearTimeout(updateTorrentTimeout);
@@ -145,13 +173,15 @@ function getRecentlyActiveTorrents() {
         return newTorrents;
       });
     })
-    // TODO: Error handling
     .catch((e) => {
       console.error(e);
-      updateTorrentTimeout = setTimeout(
-        getAllTorrents,
-        TORRENT_FETCHING_TIMEOUT
-      );
+      torrentErrorCount += 1;
+      if (torrentErrorCount < MAX_TORRENT_ERRORS) {
+        updateTorrentTimeout = setTimeout(
+          getAllTorrents,
+          TORRENT_FETCHING_TIMEOUT
+        );
+      }
     })
     .finally(() => {
       const activeColumns = get(uiColumns.active);
@@ -189,14 +219,18 @@ function getAllTorrents() {
         return;
       }
       hasError = false;
+      torrentErrorCount = 0;
       store.set(value);
     })
-    // TODO: Error handling
     .catch((e) => {
       console.error(e);
       hasError = true;
+      torrentErrorCount += 1;
     })
     .finally(() => {
+      if (torrentErrorCount >= MAX_TORRENT_ERRORS) {
+        return;
+      }
       if (hasError) {
         updateTorrentTimeout = setTimeout(
           getAllTorrents,
@@ -228,6 +262,7 @@ function createTorrentsStore() {
       return data;
     }),
     sorted,
+    paginated,
     labels: derived(store, ($torrents) =>
       $torrents
         .flatMap((torrent) => torrent[TRANSMISSION_COLUMN_LABELS])
@@ -324,10 +359,10 @@ function createTorrentsStore() {
 
       return copyToClipboard(magnetLinks.join(', '))
         .then(() => {
-          alerts.add('Magnet links copied');
+          alerts.add('磁力链接已复制');
         })
         .catch(() => {
-          alerts.add('Magnet links copy failed', 'negative');
+          alerts.add('磁力链接复制失败', 'negative');
         });
     },
     reannounce: (ids) => transmission.reannounceTorrents(ids),

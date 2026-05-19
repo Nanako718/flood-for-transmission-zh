@@ -2,7 +2,7 @@
   import Icon from '~components/Icon';
 
   export let value;
-  export let torrentStatusClass = null;
+  export const torrentStatusClass = null;
 
   let seconds;
   let minutes;
@@ -24,20 +24,20 @@
     <Icon name="InfinityIcon" />
   {:else if days}
     {days}
-    <em>d</em>
+    <em>天</em>
     {hours}
-    <em>hr</em>
+    <em>时</em>
   {:else if hours}
     {hours}
-    <em>hr</em>
+    <em>时</em>
     {minutes}
-    <em>m</em>
+    <em>分</em>
   {:else if minutes}
     {minutes}
-    <em>m</em>
+    <em>分</em>
     {seconds}
-    <em>s</em>
-  {:else}{seconds} <em>s</em>{/if}
+    <em>秒</em>
+  {:else}{seconds} <em>秒</em>{/if}
 </span>
 
 <style>

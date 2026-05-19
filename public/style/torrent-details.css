@@ -1,0 +1,454 @@
+/*
+ * 种子详情模态框 — 导航、页头、分区卡片、表格与底栏
+ */
+
+/* —— 侧栏导航 —— */
+.torrent-detail-nav {
+  background: rgba(var(--rgb-crust), 0.35);
+  border-right: 1px solid var(--color-modal-menu-border);
+  display: flex;
+  flex-direction: column;
+  flex: 0 0 140px;
+  padding: 16px 0 16px 10px;
+}
+
+.torrent-detail-nav-item {
+  background: transparent;
+  border: none;
+  border-left: 3px solid transparent;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  color: var(--color-modal-tab-label);
+  cursor: pointer;
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.25;
+  padding: 8px 12px 8px 10px;
+  text-align: left;
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    color 0.2s;
+  width: 100%;
+}
+
+.torrent-detail-nav-item:hover {
+  background: rgba(var(--rgb-surface1), 0.45);
+  color: var(--color-modal-header);
+}
+
+.torrent-detail-nav-item.active {
+  background: rgba(var(--rgb-mauve), 0.12);
+  border-left-color: var(--color-modal-tab-label-active);
+  color: var(--color-modal-tab-label-active);
+  font-weight: 600;
+}
+
+/* —— 页头 —— */
+.torrent-detail-header {
+  background: linear-gradient(
+    180deg,
+    rgba(var(--rgb-surface0), 0.6) 0%,
+    rgba(var(--rgb-base), 0.2) 100%
+  );
+  border-bottom: 1px solid var(--color-modal-menu-border);
+  display: flex;
+  flex-direction: column;
+  flex-shrink: 0;
+  gap: 12px;
+  padding: 18px 22px 16px;
+}
+
+.torrent-detail-title {
+  color: var(--color-modal-header);
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.35;
+  margin: 0;
+  word-break: break-word;
+}
+
+.torrent-detail-title:focus-visible {
+  outline: 1px solid var(--color-modal-tab-label-active);
+  outline-offset: 3px;
+  border-radius: var(--radius-xs);
+}
+
+.torrent-detail-subheading {
+  align-items: center;
+  color: var(--color-modal-text);
+  display: flex;
+  flex-wrap: wrap;
+  fill: var(--color-modal-torrent-details-header-icon);
+  gap: 10px 16px;
+  justify-content: space-between;
+}
+
+.torrent-detail-stats {
+  align-items: center;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.torrent-detail-stat {
+  align-items: center;
+  background: rgba(var(--rgb-base), 0.55);
+  border: 1px solid var(--color-modal-menu-border);
+  border-radius: var(--radius-sm);
+  display: flex;
+  font-size: 12px;
+  gap: 5px;
+  line-height: 1.3;
+  padding: 5px 10px;
+  white-space: nowrap;
+}
+
+.torrent-detail-stat > :global(.icon) {
+  flex-shrink: 0;
+  height: 13px;
+  width: 13px;
+}
+
+.torrent-detail-stat em {
+  font-size: 10px;
+  font-style: normal;
+  opacity: 0.75;
+}
+
+.torrent-detail-stat--active-download {
+  border-color: rgba(var(--rgb-green), 0.35);
+  color: var(--color-download);
+  fill: var(--color-download);
+}
+
+.torrent-detail-stat--active-upload {
+  border-color: rgba(var(--rgb-blue), 0.35);
+  color: var(--color-upload);
+  fill: var(--color-upload);
+}
+
+.torrent-detail-header :global(.progress-renderer) {
+  margin-top: 2px;
+}
+
+/* —— 内容页（详情表单等）—— */
+.torrent-detail-page {
+  color: var(--color-modal-text);
+  font-size: 13px;
+  height: 100%;
+  line-height: 1.45;
+  overflow-y: auto;
+  padding: 18px 20px;
+}
+
+.torrent-detail-page::after {
+  content: '';
+  display: block;
+  height: 20px;
+}
+
+.torrent-detail-section {
+  background: rgba(var(--rgb-base), 0.45);
+  border: 1px solid var(--color-modal-menu-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+  padding: 12px 14px 14px;
+}
+
+.torrent-detail-section h2 {
+  border-bottom: 1px solid rgba(var(--rgb-surface2), 0.5);
+  color: var(--color-modal-header);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+}
+
+.torrent-detail-info-grid {
+  display: grid;
+  gap: 8px 16px;
+  grid-template-columns: minmax(100px, auto) 1fr;
+}
+
+.torrent-detail-label {
+  color: var(--color-modal-text-light);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.torrent-detail-value {
+  color: var(--color-modal-text);
+  word-break: break-all;
+}
+
+.torrent-detail-value--labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  overflow-x: auto;
+  word-break: normal;
+}
+
+.torrent-detail-value--labels > :global(.badge) {
+  border: 1px solid;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+.torrent-detail-form-block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 4px;
+}
+
+.torrent-detail-form-block :global(.input-container) {
+  margin-bottom: 0;
+}
+
+.torrent-detail-form-row {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.torrent-detail-form-row--split {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 520px) {
+  .torrent-detail-form-row--split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.torrent-detail-page-buttons {
+  align-items: flex-end;
+  border-top: 1px solid var(--color-modal-menu-border);
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 6px;
+  padding-top: 16px;
+}
+
+/* —— 表格（Peer / Tracker）—— */
+.torrent-detail-table-wrap {
+  background: rgba(var(--rgb-base), 0.35);
+  border: 1px solid var(--color-modal-menu-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.torrent-detail-table {
+  border-collapse: collapse;
+  color: var(--color-modal-text);
+  font-size: 12px;
+  width: 100%;
+}
+
+.torrent-detail-table thead {
+  background: rgba(var(--rgb-crust), 0.5);
+}
+
+.torrent-detail-table th {
+  color: var(--color-modal-text-light);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  padding: 10px 12px;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.torrent-detail-table th.torrent-detail-table-title {
+  font-size: 13px;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.torrent-detail-table-title-inner {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.torrent-detail-table th > :global(.badge) {
+  background: var(--color-modal-badge-background);
+  color: var(--color-modal-text);
+  font-size: 11px;
+}
+
+.torrent-detail-table tbody tr {
+  border-top: 1px solid rgba(var(--rgb-surface2), 0.4);
+  transition: background-color 0.12s;
+}
+
+.torrent-detail-table tbody tr:hover {
+  background: rgba(var(--rgb-surface1), 0.35);
+}
+
+.torrent-detail-table td {
+  padding: 8px 12px;
+  vertical-align: middle;
+  white-space: nowrap;
+}
+
+.torrent-detail-table td.torrent-detail-table-peer {
+  max-width: 220px;
+  position: relative;
+  white-space: nowrap;
+}
+
+.torrent-detail-table .peer-address {
+  margin-left: 22px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.torrent-detail-table .peer-flag {
+  height: 14px;
+  left: 12px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+}
+
+.torrent-detail-table .unit {
+  font-size: 10px;
+  font-style: normal;
+  opacity: 0.75;
+}
+
+.torrent-detail-table td > :global(.icon) {
+  fill: var(--color-positive);
+  height: 12px;
+}
+
+.torrent-detail-table td.torrent-detail-table-tracker {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+  max-width: 100%;
+  white-space: normal;
+  word-break: break-all;
+}
+
+.torrent-detail-empty {
+  color: var(--color-modal-text-light);
+  font-size: 13px;
+  padding: 24px 8px;
+  text-align: center;
+}
+
+/* —— 文件树 —— */
+.torrent-detail-page :global(.folder.strong) {
+  background: rgba(var(--rgb-base), 0.4);
+  border: 1px solid var(--color-modal-menu-border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  padding: 8px 10px;
+}
+
+.torrent-detail-page :global(.file) {
+  border-radius: var(--radius-xs);
+  padding: 2px 4px;
+  transition: background-color 0.12s;
+}
+
+.torrent-detail-page :global(.file:hover) {
+  background: rgba(var(--rgb-surface1), 0.4);
+}
+
+.torrent-detail-page :global(.path) {
+  border-radius: var(--radius-xs);
+}
+
+.torrent-detail-page :global(.path:focus-visible) {
+  outline-color: var(--color-modal-tab-label-active);
+}
+
+/* —— 底栏（文件 / Tracker 选中）—— */
+.torrent-detail-action-bar {
+  align-items: center;
+  background: rgba(var(--rgb-crust), 0.65);
+  border-top: 1px solid var(--color-modal-menu-border);
+  display: flex;
+  gap: 12px;
+  justify-content: space-between;
+  padding: 10px 20px;
+}
+
+.torrent-detail-action-bar-text {
+  color: var(--color-modal-text);
+  flex: 1;
+  font-size: 13px;
+  min-width: 0;
+}
+
+.torrent-detail-action-bar-text .focus {
+  color: var(--color-modal-tab-label-active);
+  font-weight: 700;
+}
+
+.torrent-detail-action-bar-form {
+  border-top: 1px solid var(--color-modal-menu-border);
+  padding: 10px 20px;
+}
+
+.torrent-detail-action-bar-form .torrent-detail-tracker-add {
+  border-top: none;
+  padding: 0;
+}
+
+.torrent-detail-tracker-add {
+  display: flex;
+  gap: 10px;
+}
+
+.torrent-detail-tracker-add > :global(.input-container) {
+  flex: 1;
+  margin: 0;
+}
+
+/* —— 移动端 —— */
+@media (max-width: 700px) {
+  .torrent-detail-nav {
+    border-bottom: 1px solid var(--color-modal-menu-border);
+    border-right: none;
+    flex: 0 0 auto;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 6px;
+    padding: 10px 12px;
+  }
+
+  .torrent-detail-nav-item {
+    border: 1px solid transparent;
+    border-left: 1px solid transparent;
+    border-radius: var(--radius-sm);
+    padding: 6px 14px;
+    width: auto;
+  }
+
+  .torrent-detail-nav-item.active {
+    border-color: rgba(var(--rgb-mauve), 0.45);
+  }
+
+  .torrent-detail-header {
+    padding: 16px 18px 14px;
+  }
+
+  .torrent-detail-page {
+    padding: 14px 16px;
+  }
+}

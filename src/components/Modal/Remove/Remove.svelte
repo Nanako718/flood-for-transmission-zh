@@ -6,7 +6,7 @@
   let loading = false;
   let deleteData = false;
 
-  const term = $selectedTorrents.length > 1 ? 'torrent' : 'torrents';
+  const term = '个种子';
 
   const handleRemove = () => {
     if (loading) return;
@@ -14,7 +14,7 @@
     loading = true;
     if (!$selectedTorrents.length) {
       loading = false;
-      alerts.add('Select at least one torrent to continue', 'negative');
+      alerts.add('请至少选择一个种子', 'negative');
       return;
     }
     torrents
@@ -23,26 +23,26 @@
         torrents.set(
           $torrents.filter((t) => !$selectedTorrents.includes(t.id))
         );
-        alerts.add(`Succesfully removed ${$selectedTorrents.length} ${term}`);
+        alerts.add(`已成功移除 ${$selectedTorrents.length} ${term}`);
         selectedTorrents.clear();
         modals.close();
       })
       .catch(() => {
-        alerts.add(`Failed to remove ${term}`, 'negative');
+        alerts.add(`移除失败（${$selectedTorrents.length} ${term}）`, 'negative');
       });
   };
 </script>
 
-<h1>Remove torrents</h1>
+<h1>移除种子</h1>
 
 <div class="content">
   <form on:submit|preventDefault={handleRemove}>
-    <p>Are you sure you want to remove {$selectedTorrents.length} {term}?</p>
-    <Checkbox label="Delete local data" bind:checked={deleteData} />
+    <p>确定要移除 {$selectedTorrents.length} {term} 吗？</p>
+    <Checkbox label="同时删除本地数据" bind:checked={deleteData} />
     <div class="button-group">
-      <Button priority="tertiary" on:click={modals.close}>Cancel</Button>
+      <Button priority="tertiary" on:click={modals.close}>取消</Button>
       <Button priority="primary" loading={loading} type="submit">
-        Remove torrents
+        移除种子
       </Button>
     </div>
   </form>

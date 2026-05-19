@@ -17,4 +17,9 @@ export { tableHeaderConfig } from './tableHeaderConfig';
 export { timeConfig } from './timeConfig';
 export { torrentDetails } from './torrentDetails';
 export { torrents } from './torrents';
+export {
+  torrentPagination,
+  PAGE_SIZE_OPTIONS,
+  DEFAULT_PAGE_SIZE,
+} from './torrentPagination';
 export { diskUsage } from './diskUsage';

@@ -45,111 +45,74 @@
   };
 </script>
 
-<div class="container">
+<div class="torrent-detail-trackers">
   <ActionBarView
     items={selectedTrackers}
     itemName="tracker"
     itemNamePlural="trackers"
   >
-    <table>
-      <thead>
-        <tr>
-          <th class="main">
-            <span>Trackers</span>
-            <Badge>{trackers.length}</Badge>
-          </th>
-          <th>TIER</th>
-        </tr>
-      </thead>
-      <tbody>
-        {#each trackers as tracker (tracker.id)}
-          <tr>
-            <td class="tracker-name">
-              <Checkbox
-                on:change={toggleSelectedTracker}
-                group={selectedTrackers}
-                value={tracker.id.toString()}
-              />
-              {tracker.announce}
-            </td>
-            <td>{tracker.tier}</td>
-          </tr>
-        {/each}
-      </tbody>
-    </table>
+    {#if trackers.length}
+      <div class="torrent-detail-table-wrap">
+        <table class="torrent-detail-table">
+          <thead>
+            <tr>
+              <th class="torrent-detail-table-title">
+                <span class="torrent-detail-table-title-inner">
+                  Tracker
+                  <Badge>{trackers.length}</Badge>
+                </span>
+              </th>
+              <th>层级</th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each trackers as tracker (tracker.id)}
+              <tr>
+                <td class="torrent-detail-table-tracker">
+                  <Checkbox
+                    on:change={toggleSelectedTracker}
+                    group={selectedTrackers}
+                    value={tracker.id.toString()}
+                  />
+                  {tracker.announce}
+                </td>
+                <td>{tracker.tier}</td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    {:else}
+      <p class="torrent-detail-empty">暂无 Tracker</p>
+    {/if}
 
-    <form class="new-tracker-form" slot="form" on:submit={addTracker}>
+    <form
+      class="torrent-detail-tracker-add"
+      slot="form"
+      on:submit={addTracker}
+    >
       <Input
         bind:value={newTracker}
         class="new-tracker-input"
         name="tracker"
         type="url"
-        placeholder="Tracker announce URL"
+        placeholder="Tracker Announce 地址"
       />
-      <Button type="submit">Add tracker</Button>
+      <Button type="submit">添加 Tracker</Button>
     </form>
 
     <div slot="actions">
       <Button priority="tertiary" on:click={removeTrackers}>
-        Remove selected
+        移除所选
       </Button>
     </div>
   </ActionBarView>
 </div>
 
 <style>
-  .container {
-    height: 100%;
+  .torrent-detail-trackers {
     display: flex;
     flex-direction: column;
-  }
-
-  table {
-    color: var(--color-modal-text);
-    font-size: 13px;
-    width: 100%;
-  }
-
-  th {
-    color: var(--color-modal-text-light);
-    font-size: 9px;
-    text-align: left;
-    font-weight: inherit;
-    padding: 0;
-  }
-
-  th.main {
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-  }
-
-  th > :global(.badge) {
-    background: var(--color-modal-badge-background);
-    color: var(--color-modal-text);
-  }
-
-  td {
-    padding: 0;
-    line-height: 16px;
-  }
-
-  td.tracker-name {
-    display: flex;
-    gap: 8px;
-  }
-
-  td > :global(.checkbox.label) {
-    margin-left: 0;
-  }
-
-  .new-tracker-form {
-    display: flex;
-    gap: 8px;
-  }
-
-  .new-tracker-form > :global(.input-container) {
-    margin: 0;
-    flex-grow: 1;
+    height: 100%;
   }
 </style>

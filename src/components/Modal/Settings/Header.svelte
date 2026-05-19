@@ -6,7 +6,7 @@
 
 <style>
   h2 {
-    color: #fff;
+    color: var(--color-modal-header);
     font-size: 14px;
     font-weight: 500;
     margin: 12px 0;

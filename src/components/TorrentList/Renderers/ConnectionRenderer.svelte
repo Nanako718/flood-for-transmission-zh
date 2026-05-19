@@ -1,11 +1,11 @@
 <script>
   export let value = 0;
   export let connected = 0;
-  export let torrentStatusClass = null;
+  export const torrentStatusClass = null;
 </script>
 
 {value}
-<em>of</em>
+<em>/</em>
 {connected}
 
 <style>

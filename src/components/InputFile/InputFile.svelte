@@ -111,9 +111,9 @@
 >
   <Icon name="Files" />
   {#if invalid}
-    You're trying to upload a file that's not a torrent, please try again.
+    所选文件不是种子文件，请重试。
   {:else}
-    Drop some files here, or click to browse.
+    将文件拖放到此处，或点击浏览。
   {/if}
   <input
     type="file"

@@ -34,9 +34,9 @@
 
   const numberFormatter = new Intl.NumberFormat();
   const encryptionOptions = [
-    { label: 'Required', value: 'required' },
-    { label: 'Preferred', value: 'preferred' },
-    { label: 'Tolerated', value: 'tolerated' },
+    { label: '必需', value: 'required' },
+    { label: '首选', value: 'preferred' },
+    { label: '允许', value: 'tolerated' },
   ];
 
   session
@@ -64,10 +64,10 @@
       loadingInitial = false;
     })
     .catch(() => {
-      alerts.add(
-        'Unable to fetch the data for that action right now. Try again later.',
-        'negative'
-      );
+      alerts.add('暂时无法获取数据，请稍后再试。', 'negative');
+    })
+    .finally(() => {
+      loadingInitial = false;
     });
 
   const updateBlocklist = () => {
@@ -80,11 +80,11 @@
       .then(session.updateBlocklist)
       .then((newBlocklistSize) => {
         blocklistSize = newBlocklistSize;
-        alerts.add('Succesfully updated your blocklist');
+        alerts.add('屏蔽列表已更新');
       })
       .catch(() => {
         alerts.add(
-          'Failed updating your blocklist, please try again',
+          '屏蔽列表更新失败，请重试',
           'negative'
         );
       })
@@ -108,11 +108,12 @@
         'encryption': encryption,
       })
       .then(() => {
-        alerts.add('Succesfully saved peers settings');
+        alerts.add('Peer 设置已保存');
+        modals.close();
       })
       .catch(() => {
         alerts.add(
-          'Failed saving peers settings, please try again',
+          'Peer 设置保存失败，请重试',
           'negative'
         );
       })
@@ -124,55 +125,61 @@
 
 <div class="wrapper" class:loading-initial={loadingInitial}>
   <Icon name="SpinnerIcon" />
-  <form on:submit|preventDefault={handleSubmit}>
-    <Header text="Connections" />
+  <form
+    novalidate
+    onsubmit={(event) => {
+      event.preventDefault();
+      handleSubmit();
+    }}
+  >
+    <Header text="连接" />
     <Input
       bind:value={maxPeersPerTorrent}
-      label="Max peers per torrent"
+      label="单种 Peer 上限"
       type="number"
     />
     <Input
       bind:value={maxPeersOverall}
-      label="Max peers overall"
+      label="全局 Peer 上限"
       type="number"
     />
 
-    <Header text="Options" />
-    <Checkbox bind:checked={pexEnabled} label="Use PEX to find more peers" />
-    <Checkbox bind:checked={dhtEnabled} label="Use DHT to find more peers" />
-    <Checkbox bind:checked={lpdEnabled} label="Use LPD to find more peers" />
+    <Header text="选项" />
+    <Checkbox bind:checked={pexEnabled} label="启用 PEX" />
+    <Checkbox bind:checked={dhtEnabled} label="启用 DHT" />
+    <Checkbox bind:checked={lpdEnabled} label="启用 LPD" />
 
-    <Header text="Privacy" />
+    <Header text="隐私" />
     <Select
       options={encryptionOptions}
       on:change={(event) => (encryption = event.detail)}
       value={encryption}
       direction="below"
-      label="Encryption"
+      label="加密"
     />
 
-    <Header text="Blocklist" />
-    <Checkbox bind:checked={blocklistEnabled} label="Enable blocklist" />
+    <Header text="屏蔽列表" />
+    <Checkbox bind:checked={blocklistEnabled} label="启用屏蔽列表" />
     <Input
       bind:value={blocklistUrl}
       type="url"
-      hint="Blocklist has {numberFormatter.format(blocklistSize)} rules"
+      hint="屏蔽列表共有 {numberFormatter.format(blocklistSize)} 条规则"
     />
     <div class="update-wrapper">
       <Button
         type="button"
         priority="tertiary"
         on:click={updateBlocklist}
-        loading={blocklistUpdateLoading}>Update blocklist</Button
+        loading={blocklistUpdateLoading}>更新屏蔽列表</Button
       >
     </div>
 
     <div class="buttons">
-      <Button type="button" priority="tertiary" on:click={modals.close}>
-        Cancel
+      <Button type="button" priority="tertiary" onclick={() => modals.close()}>
+        取消
       </Button>
       <Button type="submit" priority="primary" loading={submitLoading}>
-        Save settings
+        保存设置
       </Button>
     </div>
   </form>
@@ -206,6 +213,7 @@
 
   .wrapper.loading-initial form {
     visibility: hidden;
+    pointer-events: none;
   }
 
   form {

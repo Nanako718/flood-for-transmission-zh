@@ -1,0 +1,94 @@
+/*
+ * 传输控制按钮 — 顶栏与种子详情页共用
+ */
+
+.transport-group {
+  align-items: center;
+  display: inline-flex;
+  gap: 4px;
+}
+
+.transport-btn {
+  align-items: center;
+  border: none;
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  fill: currentColor;
+  flex-shrink: 0;
+  font: inherit;
+  font-weight: 500;
+  justify-content: center;
+  transition:
+    background-color 0.2s,
+    fill 0.2s,
+    color 0.2s,
+    transform 0.1s,
+    opacity 0.2s;
+}
+
+.transport-btn:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.transport-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.transport-btn--start {
+  background: var(--color-toolbar-start-bg);
+  color: var(--color-toolbar-start);
+  fill: var(--color-toolbar-start);
+}
+
+.transport-btn--start:hover:not(:disabled) {
+  background: var(--color-toolbar-start-bg-hover);
+}
+
+.transport-btn--stop {
+  background: var(--color-toolbar-stop-bg);
+  color: var(--color-toolbar-stop);
+  fill: var(--color-toolbar-stop);
+}
+
+.transport-btn--stop:hover:not(:disabled) {
+  background: var(--color-toolbar-stop-bg-hover);
+}
+
+/* 顶栏：仅图标 */
+.transport-btn--icon {
+  height: 34px;
+  max-height: 34px;
+  min-height: 34px;
+  padding: 0;
+  width: 38px;
+  max-width: 38px;
+  min-width: 38px;
+}
+
+.transport-btn--icon .icon,
+.transport-btn--icon svg.icon {
+  display: block;
+  flex-shrink: 0;
+  height: 16px;
+  max-height: 16px;
+  max-width: 16px;
+  width: 16px;
+}
+
+/* 种子详情等：图标 + 文字 */
+.transport-btn--labeled {
+  font-size: 12px;
+  gap: 6px;
+  padding: 8px 14px;
+}
+
+.transport-btn--labeled .icon,
+.transport-btn--labeled svg.icon {
+  display: block;
+  flex-shrink: 0;
+  height: 14px;
+  width: 14px;
+}

@@ -15,10 +15,15 @@
     TRANSMISSION_COLUMN_ID,
   } from '~helpers/constants/columns';
   import TorrentDropzone from './TorrentDropzone.svelte';
+  import TorrentPagination from './TorrentPagination.svelte';
 
   const sortedTorrents = torrents.sorted;
+  const paginatedTorrents = torrents.paginated;
   const activeColumns = uiColumns.active;
   const { totalSize } = uiColumns;
+
+  let tableWidthDuringResize = null;
+  $: tableWidth = tableWidthDuringResize ?? $totalSize;
 
   let prio = 0;
   $: {
@@ -136,15 +141,24 @@
   }}
 />
 
-<div class="wrapper">
-  <table class="table" style="width: {$totalSize}px">
+<div class="torrent-list">
+  <div class="wrapper">
+  <table class="table" style="width: {tableWidth}px">
     <thead class="table-header">
       {#each $activeColumns as column (column.id)}
-        <ColumnHeader id={column.id} />
+        <ColumnHeader
+          id={column.id}
+          on:resizing={(event) => {
+            tableWidthDuringResize = event.detail.tableWidth;
+          }}
+          on:resized={() => {
+            tableWidthDuringResize = null;
+          }}
+        />
       {/each}
     </thead>
     <tbody>
-      {#each $sortedTorrents as torrent (torrent[TRANSMISSION_COLUMN_ID])}
+      {#each $paginatedTorrents.items as torrent (torrent[TRANSMISSION_COLUMN_ID])}
         <Torrent
           torrent={torrent}
           on:click={handleTorrentClick}
@@ -157,10 +171,22 @@
   {#if !$modals}
     <TorrentDropzone />
   {/if}
+  </div>
+  <TorrentPagination />
 </div>
 
 <style>
+  .torrent-list {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    height: 100%;
+    overflow: hidden;
+  }
+
   .wrapper {
+    flex: 1;
+    min-height: 0;
     overflow: auto;
     position: relative;
     background-color: var(--color-torrent-list-background);
@@ -170,5 +196,14 @@
     border-spacing: 0;
     table-layout: fixed;
     user-select: none;
+  }
+
+  :global(body.column-resizing) {
+    cursor: col-resize !important;
+    user-select: none;
+  }
+
+  :global(body.column-resizing *) {
+    cursor: col-resize !important;
   }
 </style>

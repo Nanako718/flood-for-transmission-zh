@@ -7,14 +7,17 @@
   export let priority = 'primary';
   export let type = 'button';
   export let loading = false;
+  /** Svelte 5 组件回调；与 on:click 二选一或同时使用 */
+  export let onclick = undefined;
 
   const handleClick = (event) => {
     if (loading) return;
     dispatch('click', event);
+    onclick?.(event);
   };
 </script>
 
-<button type={type} class="button {priority}" on:click={handleClick}>
+<button type={type} class="button {priority}" onclick={handleClick}>
   {#if loading}
     <Icon name="SpinnerIcon" />
   {:else}
@@ -24,9 +27,9 @@
 
 <style>
   button {
-    border-radius: 4px;
+    border-radius: var(--radius-sm);
     border: solid 1px currentColor;
-    color: #fff;
+    color: var(--color-button-text);
     cursor: pointer;
     font-size: 14px;
     font-weight: 500;
@@ -68,7 +71,6 @@
       0 1px 2px var(--color-button-tertiary-shadow-2);
   }
 
-  /* TODO: consider removing this, only used in select can be put there instead? */
   button.quaternary {
     background: var(--color-button-quaternary-background);
     border-color: var(--color-button-quaternary-border);

@@ -27,124 +27,70 @@
   };
 </script>
 
-<div class="container">
-  <table>
-    <thead>
-      <tr>
-        <th class="main">
-          <span>Peers</span>
-          <Badge>{peers.length}</Badge>
-        </th>
-        <th>DL</th>
-        <th>UL</th>
-        <th>%</th>
-        <th>CLIENT</th>
-        <th>ENC</th>
-      </tr>
-    </thead>
-    <tbody>
-      {#each peers as peer (peer.address)}
-        <tr>
-          <td class="address-cell">
-            {#if $ipAddress[peer.address]?.country_code}
-              <img
-                class="flag"
-                src="images/flags/{$ipAddress[
-                  peer.address
-                ].country_code.toLowerCase()}.png"
-                alt="{$ipAddress[peer.address].country_code}"
-                title="{$ipAddress[peer.address].country_name}"
-              />
-            {:else}
-              <img class="flag" src="images/flags/_unknown.png" alt="Unknown" />
-            {/if}
-            <span class="address">{peer.address}</span>
-          </td>
-          <td>
-            {getDownloadSpeed(peer).value}<em class="unit"
-              >{getDownloadSpeed(peer).size}</em
-            >
-          </td>
-          <td>
-            {getUploadSpeed(peer).value}<em class="unit"
-              >{getUploadSpeed(peer).size}</em
-            >
-          </td>
-          <td>{Math.round(peer.progress * 100)}%</td>
-          <td>{peer.clientName}</td>
-          <td>
-            {#if peer.isEncrypted}
-              <Icon name="Checkmark" />
-            {/if}
-          </td>
-        </tr>
-      {/each}
-    </tbody>
-  </table>
+<div class="torrent-detail-page">
+  {#if peers.length}
+    <div class="torrent-detail-table-wrap">
+      <table class="torrent-detail-table">
+        <thead>
+          <tr>
+            <th class="torrent-detail-table-title">
+              <span class="torrent-detail-table-title-inner">
+                Peer
+                <Badge>{peers.length}</Badge>
+              </span>
+            </th>
+            <th>下</th>
+            <th>上</th>
+            <th>%</th>
+            <th>客户端</th>
+            <th>加密</th>
+          </tr>
+        </thead>
+        <tbody>
+          {#each peers as peer (peer.address)}
+            <tr>
+              <td class="torrent-detail-table-peer">
+                {#if $ipAddress[peer.address]?.country_code}
+                  <img
+                    class="peer-flag"
+                    src="images/flags/{$ipAddress[
+                      peer.address
+                    ].country_code.toLowerCase()}.png"
+                    alt="{$ipAddress[peer.address].country_code}"
+                    title="{$ipAddress[peer.address].country_name}"
+                  />
+                {:else}
+                  <img
+                    class="peer-flag"
+                    src="images/flags/_unknown.png"
+                    alt="未知"
+                  />
+                {/if}
+                <span class="peer-address">{peer.address}</span>
+              </td>
+              <td>
+                {getDownloadSpeed(peer).value}<em class="unit"
+                  >{getDownloadSpeed(peer).size}</em
+                >
+              </td>
+              <td>
+                {getUploadSpeed(peer).value}<em class="unit"
+                  >{getUploadSpeed(peer).size}</em
+                >
+              </td>
+              <td>{Math.round(peer.progress * 100)}%</td>
+              <td>{peer.clientName}</td>
+              <td>
+                {#if peer.isEncrypted}
+                  <Icon name="Checkmark" />
+                {/if}
+              </td>
+            </tr>
+          {/each}
+        </tbody>
+      </table>
+    </div>
+  {:else}
+    <p class="torrent-detail-empty">当前没有已连接的 Peer</p>
+  {/if}
 </div>
-
-<style>
-  .container {
-    padding: 20px 25px;
-    height: 100%;
-    overflow-y: auto;
-  }
-
-  table {
-    color: var(--color-modal-text);
-    font-size: 13px;
-    width: 100%;
-  }
-
-  th {
-    color: var(--color-modal-text-light);
-    font-size: 9px;
-    text-align: left;
-    font-weight: inherit;
-    padding: 0 5px;
-  }
-
-  th.main {
-    font-size: 14px;
-    display: flex;
-    align-items: center;
-  }
-
-  th > :global(.badge) {
-    background: var(--color-modal-badge-background);
-    color: var(--color-modal-text);
-  }
-
-  td {
-    padding: 0 5px;
-    line-height: 16px;
-    white-space: nowrap;
-  }
-
-  td > :global(.icon) {
-    height: 12px;
-    fill: var(--color-positive);
-  }
-
-  .address-cell {
-    position: relative;
-  }
-
-  .address {
-    margin-left: 23px;
-  }
-
-  .flag {
-    width: 16px;
-    vertical-align: middle;
-    display: inline-block;
-    position: absolute;
-    left: 5px;
-  }
-
-  .unit {
-    font-size: 11px;
-    font-style: normal;
-    opacity: 0.8;
-  }
-</style>

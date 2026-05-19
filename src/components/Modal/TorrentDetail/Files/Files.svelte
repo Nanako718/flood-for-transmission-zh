@@ -3,9 +3,10 @@
   import {
     TRANSMISSION_COLUMN_DOWNLOAD_DIR,
     TRANSMISSION_COLUMN_FILES,
+    TRANSMISSION_COLUMN_FILE_STATS,
   } from '~helpers/constants/columns';
 
-  import Select from '~components/Select';
+  import PriorityIndicator from '~components/PriorityIndicator';
   import ActionBarView from '~components/Modal/TorrentDetail/ActionBarView';
   import Folder from './Folder';
   import {
@@ -14,19 +15,23 @@
   } from '~helpers/folderStructureHelper';
 
   let selectedFiles = [];
-  const prioOptions = [
-    { label: "Don't download", value: -2 },
-    { label: 'Low', value: -1 },
-    { label: 'Normal', value: 0 },
-    { label: 'High', value: 1 },
-  ];
+
+  const filePriority = (index) =>
+    $torrentDetails[TRANSMISSION_COLUMN_FILE_STATS]?.[index]?.priority ?? 0;
+
+  $: bulkFilePriority = (() => {
+    if (!selectedFiles.length) return 0;
+    const first = filePriority(selectedFiles[0]);
+    return selectedFiles.every((i) => filePriority(i) === first) ? first : null;
+  })();
 
   $: files = $torrentDetails[TRANSMISSION_COLUMN_FILES].toSorted((a, b) =>
     a.name.localeCompare(b.name)
   );
   $: structure = getFolderStructure(files);
 
-  const handleSelectedFilePrioChange = (event) => {
+  const handleBulkFilePrioChange = (event) => {
+    if (!selectedFiles.length) return;
     torrentDetails.setPriority($torrentDetails, selectedFiles, event.detail);
   };
 
@@ -35,8 +40,8 @@
   };
 </script>
 
-<div class="container">
-  <ActionBarView items={selectedFiles} itemName="file" itemNamePlural="files">
+<div class="torrent-detail-files">
+  <ActionBarView items={selectedFiles} itemName="文件">
     {#if files.length}
       <Folder
         structure={structure}
@@ -51,34 +56,29 @@
         onSingleFilePrioChange={handleSingleFilePrioChange}
       />
     {:else}
-      <div class="empty">
-        No files to show right now. Metadata is probably missing.
-      </div>
+      <p class="torrent-detail-empty">
+        暂无文件可显示，可能缺少元数据。
+      </p>
     {/if}
 
-    <div slot="actions" class="select-container">
-      <Select
-        options={prioOptions}
-        placeholder="Set priority"
-        on:change={handleSelectedFilePrioChange}
+    <div slot="actions" class="bulk-priority">
+      <PriorityIndicator
+        allowDisabled
+        value={bulkFilePriority}
+        on:click={handleBulkFilePrioChange}
       />
     </div>
   </ActionBarView>
 </div>
 
 <style>
-  .container {
+  .torrent-detail-files {
     display: flex;
     flex-direction: column;
     height: 100%;
   }
 
-  .empty {
-    color: var(--color-modal-text);
-    font-size: 14px;
-  }
-
-  .select-container {
-    flex-grow: 1;
+  .bulk-priority {
+    flex-shrink: 0;
   }
 </style>

@@ -1,0 +1,11 @@
+/*
+ * 全局 UI 圆角与控件基线（Catppuccin Mocha）
+ */
+
+/* 表单控件默认圆角（组件内可覆盖） */
+button,
+input,
+select,
+textarea {
+  border-radius: var(--radius-sm);
+}

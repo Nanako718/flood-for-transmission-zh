@@ -22,7 +22,7 @@
 <style>
   .alert-container {
     background: var(--color-alert-background);
-    border-radius: 3px;
+    border-radius: var(--radius-sm);
     bottom: 5px;
     color: var(--color-alert-text);
     font-size: 0.85rem;

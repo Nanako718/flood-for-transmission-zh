@@ -3,6 +3,9 @@ import Transmission from '~helpers/Transmission';
 import {
   SESSION_COLUMN_ALT_SPEED_DOWN,
   SESSION_COLUMN_ALT_SPEED_ENABLED,
+  SESSION_COLUMN_ALT_SPEED_TIME_BEGIN,
+  SESSION_COLUMN_ALT_SPEED_TIME_ENABLED,
+  SESSION_COLUMN_ALT_SPEED_TIME_END,
   SESSION_COLUMN_ALT_SPEED_UP,
   SESSION_COLUMN_SPEED_LIMIT_DOWN_ENABLED,
   SESSION_COLUMN_SPEED_LIMIT_DOWN,
@@ -17,6 +20,9 @@ const SESSION_REQUEST_INTERVAL = 2000;
 const SESSION_BASE_COLUMNS = [
   SESSION_COLUMN_ALT_SPEED_DOWN,
   SESSION_COLUMN_ALT_SPEED_ENABLED,
+  SESSION_COLUMN_ALT_SPEED_TIME_BEGIN,
+  SESSION_COLUMN_ALT_SPEED_TIME_ENABLED,
+  SESSION_COLUMN_ALT_SPEED_TIME_END,
   SESSION_COLUMN_ALT_SPEED_UP,
   SESSION_COLUMN_SPEED_LIMIT_DOWN_ENABLED,
   SESSION_COLUMN_SPEED_LIMIT_DOWN,
@@ -26,6 +32,8 @@ const SESSION_BASE_COLUMNS = [
   SESSION_COLUMN_RPC_VERSION,
 ];
 let updateSessionTimeout;
+let sessionErrorCount = 0;
+const MAX_SESSION_ERRORS = 8;
 const store = writable({});
 const { set, subscribe, update } = store;
 
@@ -40,11 +48,17 @@ function updateSession(setSession) {
       if (!result) {
         return;
       }
+      sessionErrorCount = 0;
       setSession(result);
     })
-    // TODO: Error handling
-    .catch(console.error)
+    .catch((error) => {
+      sessionErrorCount += 1;
+      console.error(error);
+    })
     .finally(() => {
+      if (sessionErrorCount >= MAX_SESSION_ERRORS) {
+        return;
+      }
       updateSessionTimeout = setTimeout(
         updateSession.bind(null, setSession),
         SESSION_REQUEST_INTERVAL
@@ -127,7 +141,10 @@ function createSessionStore() {
       }),
     getPortTest: () => transmission.getPortTest(),
     updateBlocklist: () => transmission.updateBlocklist(),
-    update: (data) => transmission.setSession(data),
+    update: (data) =>
+      transmission.setSession(data).then(() => {
+        store.update((state) => ({ ...state, ...data }));
+      }),
   };
 }
 

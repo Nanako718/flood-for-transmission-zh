@@ -44,6 +44,10 @@
     perSize: $session[SESSION_COLUMN_UNITS]?.[SESSION_COLUMN_UNITS_SIZE],
   });
 
+  $: torrentStatus = $torrentDetails[TRANSMISSION_COLUMN.STATUS];
+  $: isStopped = torrentStatus === STATUSES.indexOf(STATUS_STOPPED);
+  $: isActive = torrentStatus > 0;
+
   const updatePriority = (event) => {
     const newPrio = event.detail;
     torrents.setTorrents([torrentId], {
@@ -127,72 +131,90 @@
   };
 </script>
 
-<div class="header">
-  <h1
+<div class="torrent-detail-header">
+  <div
+    class="torrent-detail-title"
+    role="textbox"
+    tabindex="0"
+    aria-label="种子名称，双击可重命名"
     on:dblclick={makeEditable}
     on:blur={rename}
     on:paste={handlePaste}
     on:keydown={handleEnter}
   >
     {$torrentDetails[TRANSMISSION_COLUMN.NAME]}
-  </h1>
-  <div class="subheading">
-    <ul>
+  </div>
+  <div class="torrent-detail-subheading">
+    <ul class="torrent-detail-stats">
       <li
-        class:active={!!downloadSpeed.value}
-        title="Download speed"
-        class="downloading"
+        class="torrent-detail-stat"
+        class:torrent-detail-stat--active-download={!!downloadSpeed.value}
+        title="下载速度"
       >
         <Icon name="Download" />
         <span>
           {downloadSpeed.value}<em>{downloadSpeed.size}</em>
-          —
+          ·
           {downloadSize.value}<em>{downloadSize.size}</em>
         </span>
       </li>
-      <li class:active={!!uploadSpeed.value} title="Upload speed">
+      <li
+        class="torrent-detail-stat"
+        class:torrent-detail-stat--active-upload={!!uploadSpeed.value}
+        title="上传速度"
+      >
         <Icon name="Upload" />
         <span>
           {uploadSpeed.value}<em>{uploadSpeed.size}</em>
-          —
+          ·
           {uploadSize.value}<em>{uploadSize.size}</em>
         </span>
       </li>
-      <li title="Ratio">
+      <li class="torrent-detail-stat" title="分享率">
         <Icon name="RatioIcon" />
         {($torrentDetails[TRANSMISSION_COLUMN.RATIO] || 0).toFixed(2)}
       </li>
-      <li title="ETA">
+      <li class="torrent-detail-stat" title="剩余时间">
         <Icon name="ETA" />
         <ArrivalRenderer value={$torrentDetails[TRANSMISSION_COLUMN.ETA]} />
       </li>
     </ul>
 
-    <ul class="right">
-      <li class="button">
+    <div class="torrent-detail-toolbar">
+      <div class="torrent-detail-priority-block">
+        <span class="torrent-detail-priority-label">优先级</span>
         <PriorityIndicator
           value={$torrentDetails[TRANSMISSION_COLUMN.PRIORITY]}
-          showLabel
           on:click={updatePriority}
         />
-      </li>
-      <li
-        class:active={$torrentDetails[TRANSMISSION_COLUMN.STATUS] > 0}
-        on:click={startTorrent}
-        class="button"
+      </div>
+      <div
+        class="transport-group"
+        role="group"
+        aria-label="传输控制"
       >
-        <Icon name="StartIcon" />
-        Start
-      </li>
-      <li
-        class:active={$torrentDetails[TRANSMISSION_COLUMN.STATUS] === 0}
-        on:click={stopTorrent}
-        class="button"
-      >
-        <Icon name="StopIcon" />
-        Stop
-      </li>
-    </ul>
+        <button
+          type="button"
+          class="transport-btn transport-btn--labeled transport-btn--start"
+          disabled={isActive}
+          title={isActive ? '任务运行中' : '开始'}
+          on:click={startTorrent}
+        >
+          <Icon name="StartIcon" />
+          开始
+        </button>
+        <button
+          type="button"
+          class="transport-btn transport-btn--labeled transport-btn--stop"
+          disabled={isStopped}
+          title={isStopped ? '已停止' : '停止'}
+          on:click={stopTorrent}
+        >
+          <Icon name="StopIcon" />
+          停止
+        </button>
+      </div>
+    </div>
   </div>
   <ProgressRenderer
     value={$torrentDetails[TRANSMISSION_COLUMN.DOWNLOAD_PROGRESS]}
@@ -203,82 +225,3 @@
   />
 </div>
 
-<style>
-  .header {
-    color: var(--color-modal-header);
-    box-shadow: inset 0 -1px 0 var(--color-modal-torrent-details-shadow);
-    flex: 0 0 auto;
-    overflow: hidden;
-    padding: 20px 25px;
-    gap: 4px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  h1 {
-    font-size: 20px;
-    color: var(--color-modal-header);
-    font-weight: 500;
-    line-height: 1.25;
-    word-break: break-word;
-    cursor: pointer;
-  }
-
-  .subheading {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    row-gap: 4px;
-    justify-content: space-between;
-    color: var(--color-modal-text);
-    fill: var(--color-modal-torrent-details-header-icon);
-  }
-
-  ul {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-  }
-
-  li {
-    display: flex;
-    align-items: center;
-    font-size: 13.6px;
-  }
-
-  li.active {
-    color: var(--color-upload);
-    fill: var(--color-upload);
-  }
-
-  li.active.downloading {
-    color: var(--color-download);
-    fill: var(--color-download);
-  }
-
-  li > :global(.icon) {
-    width: 12px;
-    margin-right: 3px;
-  }
-
-  em {
-    font-size: 11px;
-    font-style: normal;
-    opacity: 0.8;
-  }
-
-  .right {
-    justify-content: flex-end;
-  }
-
-  li.button {
-    cursor: pointer;
-  }
-
-  @media (max-width: 700px) {
-    .header {
-      box-shadow: none;
-      padding: 20px 25px 10px;
-    }
-  }
-</style>

@@ -5,7 +5,8 @@ let transmission;
 export default class Transmission {
   _authorizationHeader = null;
   _sessionToken = null;
-  _url = '../rpc';
+  // 开发且未配置 .env 时走本地 dev-server 代理（见 scripts/dev-server.mjs）
+  _url = __ENV__ === '"development"' ? '/transmission/rpc' : '../rpc';
 
   constructor() {
     if (transmission) {
@@ -47,6 +48,7 @@ export default class Transmission {
       body: JSON.stringify(body),
       credentials: this._authorizationHeader ? undefined : 'include',
       headers,
+      redirect: 'manual',
     });
   }
 
@@ -56,30 +58,52 @@ export default class Transmission {
     this._sessionToken = response.headers.get(SESSION_TOKEN_HEADER);
   }
 
-  async rpcCall(method, args) {
-    if (!this._sessionToken) {
-      const response = await this.request('');
-      this.readToken(response);
-    }
-
-    const response = await this.request(method, args);
-
-    // Invalid token
-    if (response.status === 409) {
-      this.readToken(response);
-      return;
+  async parseRpcResponse(response) {
+    if (response.status >= 300 && response.status < 400) {
+      const location = response.headers.get('Location') || '';
+      throw new Error(
+        `Transmission RPC 被重定向 (${response.status})${location ? ` → ${location}` : ''}。` +
+          '请检查 TRANSMISSION_PATH，反向代理环境通常应为 /transmission/rpc。'
+      );
     }
 
     if (!response.ok) {
-      throw Error(response.statusText);
+      const body = await response.text();
+      throw new Error(
+        `Transmission RPC 失败 (${response.status}): ${body.slice(0, 120)}`
+      );
+    }
+
+    const contentType = response.headers.get('content-type') || '';
+    if (!contentType.includes('json')) {
+      const body = await response.text();
+      throw new Error(
+        'Transmission 返回了 HTML 而非 JSON，请检查 RPC 地址与路径是否正确。' +
+          ` 响应开头: ${body.slice(0, 80)}`
+      );
     }
 
     const output = await response.json();
     if (output?.result !== 'success') {
-      throw Error(output);
+      throw new Error(
+        typeof output === 'object'
+          ? JSON.stringify(output)
+          : String(output)
+      );
     }
 
     return output;
+  }
+
+  async rpcCall(method, args) {
+    let response = await this.request(method, args);
+
+    if (response.status === 409) {
+      this.readToken(response);
+      response = await this.request(method, args);
+    }
+
+    return this.parseRpcResponse(response);
   }
 
   getSession(fields) {

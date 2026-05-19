@@ -1,4 +1,4 @@
-name: 'Release'
+name: Release
 
 on:
   push:
@@ -8,54 +8,75 @@ on:
 
 jobs:
   release:
-    name: 'Release'
-    runs-on: 'ubuntu-latest'
+    name: Release
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Set tag var
+      - name: 解析版本标签
         run: |
-          TAG_NAME=${GITHUB_REF#refs/tags/}
-          echo "tag_name=$TAG_NAME" >> $GITHUB_ENV
-      # Checks out a copy of your repository on the ubuntu-latest machine
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          # Make sure the actual branch is checked out when running on pull requests
-          ref: ${{ github.head_ref }}
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            TAG_NAME="v${GITHUB_RUN_NUMBER}"
+          else
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+          fi
+          echo "tag_name=$TAG_NAME" >> "$GITHUB_ENV"
+
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Cache node modules
         uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
         with:
           path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('**/package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+            ${{ runner.os }}-npm-
 
-      - name: Install modules
+      - name: Install
         run: npm ci
 
       - name: Build
         run: npm run build
 
-      - name: Copy public
-        run: cp -r public flood-for-transmission
+      - name: Package
+        run: |
+          cp -r public flood-for-transmission
+          zip -r flood-for-transmission.zip flood-for-transmission
+          tar -czvf flood-for-transmission.tar.gz flood-for-transmission
 
-      - name: Zip release
-        run: zip -r flood-for-transmission.zip flood-for-transmission
-
-      - name: Tar release
-        run: tar -czvf flood-for-transmission.tar.gz flood-for-transmission
-
-      - name: Release
-        uses: 'marvinpinto/action-automatic-releases@latest'
+      - name: Publish release
+        uses: softprops/action-gh-release@v2
         with:
-          repo_token: '${{ secrets.GITHUB_TOKEN }}'
+          tag_name: ${{ env.tag_name }}
+          name: Flood for Transmission 中文版 ${{ env.tag_name }}
           prerelease: false
-          title: '${{ env.tag_name }}'
           files: |
             flood-for-transmission.zip
             flood-for-transmission.tar.gz
+          body: |
+            ## Flood for Transmission 中文版 ${{ env.tag_name }}
+
+            基于 [Flood for Transmission](https://github.com/johman10/flood-for-transmission) 独立维护的 **Transmission 中文 Web 界面**（纯前端，无需额外守护进程）。
+
+            ### 安装
+
+            1. 下载下方 **zip** 或 **tar.gz** 并解压到目标目录。
+            2. 将 Transmission 的 Web 根目录指向解压后的文件夹：
+               - Linux：`Environment=TRANSMISSION_WEB_HOME=/path/to/flood-for-transmission`
+               - Windows：系统环境变量 `TRANSMISSION_WEB_HOME`
+            3. 重启 Transmission，浏览器访问 Daemon 地址（默认 `http://localhost:9091`）。
+            4. 若有自定义配置，请备份并恢复 `public/config.json`。
+
+            详细步骤见 [README](https://github.com/Nanako718/flood-for-transmission/blob/main/README.md)。
+
+            ### 说明
+
+            - 本 Release **不**同步自上游 johman10 仓库；问题反馈请在本仓库 [Issues](https://github.com/Nanako718/flood-for-transmission/issues) 提交。
+            - 界面设计溯源自 [Flood](https://github.com/Flood-UI/flood)；Transmission 适配代码来自上游项目。
+
+            ### 致谢
+
+            - [johman10/flood-for-transmission](https://github.com/johman10/flood-for-transmission)
+            - [Flood-UI/flood](https://github.com/Flood-UI/flood)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

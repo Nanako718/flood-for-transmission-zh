@@ -1,0 +1,87 @@
+/*
+ * 设置模态框 — 共用布局与表单样式
+ */
+
+.settings-content form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  line-height: 1.4;
+  color: var(--color-modal-text);
+}
+
+.settings-section {
+  background: rgba(var(--rgb-base), 0.45);
+  border: 1px solid var(--color-modal-menu-border);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+  padding: 12px 14px 14px;
+}
+
+.settings-section:last-of-type {
+  margin-bottom: 8px;
+}
+
+.settings-section h2 {
+  border-bottom: 1px solid rgba(var(--rgb-surface2), 0.5);
+  color: var(--color-modal-header);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  margin: 0 0 12px;
+  padding-bottom: 8px;
+}
+
+.settings-row {
+  align-items: flex-start;
+  display: grid;
+  gap: 8px 12px;
+  grid-template-columns: 1fr;
+  margin-bottom: 12px;
+}
+
+.settings-row:last-child {
+  margin-bottom: 0;
+}
+
+.settings-row--inline {
+  align-items: center;
+  grid-template-columns: auto 1fr;
+}
+
+.settings-row--time {
+  grid-template-columns: 1fr 1fr;
+}
+
+.settings-row :global(.input-container) {
+  margin-bottom: 0;
+}
+
+.settings-row :global(.checkbox) {
+  margin-bottom: 0;
+}
+
+.settings-row.is-disabled {
+  opacity: 0.45;
+  pointer-events: none;
+}
+
+.settings-hint {
+  color: var(--color-modal-text-light);
+  font-size: 12px;
+  line-height: 1.45;
+  margin: -4px 0 12px;
+}
+
+.settings-buttons {
+  align-items: flex-end;
+  border-top: 1px solid var(--color-modal-menu-border);
+  display: flex;
+  flex-grow: 1;
+  gap: 10px;
+  justify-content: flex-end;
+  margin-top: 8px;
+  padding-top: 16px;
+}
+

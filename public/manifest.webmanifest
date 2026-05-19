@@ -1,6 +1,6 @@
 {
-  "name": "Flood for Transmission",
-  "description": "Transmission with a Flood UI",
+  "name": "Flood for Transmission 中文版",
+  "description": "基于 Flood for Transmission 的 Transmission 中文 Web 界面",
   "icons": [
     {
       "src": "images/favicon/android-chrome-192x192.png",
@@ -14,8 +14,9 @@
     }
   ],
   "start_url": "./",
-  "theme_color": "#293341",
-  "background_color": "#293341",
+  "theme_color": "#1e1e2e",
+  "background_color": "#1e1e2e",
   "scope": "./",
-  "display": "minimal-ui"
+  "display": "minimal-ui",
+  "lang": "zh-CN"
 }

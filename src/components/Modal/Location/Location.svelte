@@ -33,24 +33,24 @@
     loadingSubmit = true;
     if (!$selectedTorrents.length) {
       loadingSubmit = false;
-      alerts.add('Select at least one torrent to continue', 'negative');
+      alerts.add('请至少选择一个种子', 'negative');
       return;
     }
 
     torrents
       .setLocation($selectedTorrents, location, moveData)
       .then(() => {
-        alerts.add('Succesfully set location');
+        alerts.add('位置设置成功');
         modals.close();
       })
       .catch(() => {
-        alerts.add('Failed to set location', 'negative');
+        alerts.add('位置设置失败', 'negative');
         loadingSubmit = false;
       });
   };
 </script>
 
-<h1>Set torrent location</h1>
+<h1>设置种子位置</h1>
 
 <div class="content" class:loading-initial={loadingInitial}>
   <Icon name="SpinnerIcon" />
@@ -58,17 +58,17 @@
     <InputPath
       type="text"
       bind:value={location}
-      placeholder="Destination"
-      label="Torrent location"
+      placeholder="保存位置"
+      label="种子位置"
       pattern={PATH_VALIDATION_REGEX}
-      validationMessage="Destination must be an absolute path."
+      validationMessage="保存位置必须是绝对路径。"
       required
     />
     <div class="button-group">
-      <Checkbox label="Move data" bind:checked={moveData} />
-      <Button priority="tertiary" on:click={modals.close}>Cancel</Button>
+      <Checkbox label="移动数据" bind:checked={moveData} />
+      <Button priority="tertiary" on:click={modals.close}>取消</Button>
       <Button priority="primary" loading={loadingSubmit} type="submit">
-        Set torrent location
+        设置种子位置
       </Button>
     </div>
   </form>

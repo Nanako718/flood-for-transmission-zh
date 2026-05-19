@@ -18,7 +18,7 @@
     loading = true;
     if (!$selectedTorrents.length) {
       loading = false;
-      alerts.add('Select at least one torrent to continue', 'negative');
+      alerts.add('请至少选择一个种子', 'negative');
       return;
     }
 
@@ -29,29 +29,29 @@
     torrents
       .setTorrents($selectedTorrents, { [TRANSMISSION_COLUMN_LABELS]: labels })
       .then(() => {
-        alerts.add('Succesfully set labels');
+        alerts.add('标签设置成功');
         modals.close();
       })
       .catch(() => {
-        alerts.add('Failed to set labels', 'negative');
+        alerts.add('标签设置失败', 'negative');
       });
   };
 </script>
 
-<h1>Set labels</h1>
+<h1>设置标签</h1>
 
 <div class="content">
   <form on:submit|preventDefault={handleLabel}>
     <Input
       type="text"
       bind:value={labelValue}
-      placeholder="Enter labels"
-      label="Labels (comma separated)"
+      placeholder="输入标签"
+      label="标签（逗号分隔）"
     />
     <div class="button-group">
-      <Button priority="tertiary" on:click={modals.close}>Cancel</Button>
+      <Button priority="tertiary" on:click={modals.close}>取消</Button>
       <Button priority="primary" loading={loading} type="submit"
-        >Set labels</Button
+        >设置标签</Button
       >
     </div>
   </form>

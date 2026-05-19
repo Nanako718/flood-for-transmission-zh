@@ -1,0 +1,104 @@
+/*
+ * 优先级分段选择 — 种子 / 文件 / 右键菜单
+ */
+
+.priority-select {
+  background: rgba(var(--rgb-base), 0.65);
+  border: 1px solid var(--color-modal-menu-border);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  gap: 0;
+  padding: 2px;
+}
+
+.priority-select__option {
+  background: transparent;
+  border: none;
+  border-radius: calc(var(--radius-sm) - 2px);
+  color: var(--color-modal-text-light);
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1.2;
+  min-width: 2.5em;
+  padding: 5px 10px;
+  transition:
+    background-color 0.15s,
+    color 0.15s,
+    box-shadow 0.15s;
+  white-space: nowrap;
+}
+
+.priority-select__option:hover:not(:disabled) {
+  background: rgba(var(--rgb-surface1), 0.65);
+  color: var(--color-modal-header);
+}
+
+.priority-select__option.active {
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  color: var(--color-modal-header);
+  font-weight: 600;
+}
+
+.priority-select__option--high.active {
+  background: rgba(var(--rgb-peach), 0.22);
+  color: var(--color-priority-high);
+}
+
+.priority-select__option--normal.active {
+  background: rgba(var(--rgb-green), 0.18);
+  color: var(--color-priority-normal);
+}
+
+.priority-select__option--low.active {
+  background: rgba(var(--rgb-sapphire), 0.2);
+  color: var(--color-priority-low);
+}
+
+.priority-select__option--off.active {
+  background: rgba(var(--rgb-overlay0), 0.25);
+  color: var(--color-priority-off);
+}
+
+.priority-select.compact .priority-select__option {
+  font-size: 11px;
+  min-width: 1.75em;
+  padding: 3px 6px;
+}
+
+.priority-select--mixed .priority-select__option.active {
+  box-shadow: none;
+  font-weight: 500;
+}
+
+.priority-select__option:disabled {
+  cursor: default;
+  opacity: 0.45;
+}
+
+.torrent-detail-toolbar {
+  align-items: flex-end;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* 详情页头 */
+.torrent-detail-priority-block {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.torrent-detail-priority-label {
+  color: var(--color-modal-text-light);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+/* 文件行内紧凑优先级 */
+.file-priority-select {
+  flex-shrink: 0;
+}
