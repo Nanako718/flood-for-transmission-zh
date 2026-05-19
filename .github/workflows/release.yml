@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*'
   workflow_dispatch:
+    inputs:
+      version:
+        description: 版本标签（例如 v1.0.0）
+        required: true
+        default: v1.0.0
 
 permissions:
   contents: write
@@ -18,9 +23,9 @@ jobs:
       - name: 解析版本标签
         run: |
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            TAG_NAME="v${GITHUB_RUN_NUMBER}"
+            TAG_NAME="${{ inputs.version }}"
           else
-            TAG_NAME=${GITHUB_REF#refs/tags/}
+            TAG_NAME="${GITHUB_REF#refs/tags/}"
           fi
           echo "tag_name=$TAG_NAME" >> "$GITHUB_ENV"
 
